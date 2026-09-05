@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2025 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<com.android.systemui.car.systembar.base.CarSystemBarView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:systemui="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="ltr"
+    android:padding="@dimen/split_system_bar_padding">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/split_system_bar_background"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/clock_container"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingStart="@dimen/car_top_right_system_bar_horizontal_padding"
+            android:paddingEnd="@dimen/car_top_right_system_bar_horizontal_padding">
+            <com.android.systemui.statusbar.policy.Clock
+                android:id="@+id/clock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:elevation="@dimen/car_system_bar_clock_elevation"
+                android:singleLine="true"
+                style="@style/SystemBarClockText"
+                systemui:amPmStyle="gone"
+                />
+        </FrameLayout>
+
+        <include layout="@layout/read_only_status_icons"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <com.android.systemui.car.systembar.base.CarSystemBarButton
+            android:id="@+id/notifications"
+            android:contentDescription="@string/system_bar_notifications_label"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            style="@style/HorizontalBarButton"
+            systemui:highlightWhenSelected="true"
+            systemui:icon="@drawable/car_ic_notification_dock"
+            systemui:longIntent="intent:#Intent;action=com.android.car.bugreport.action.BUG_REPORT;end"
+            systemui:systemBarDisableFlags="notificationIcons"
+            systemui:controller="com.android.systemui.car.notification.NotificationButtonController"/>
+
+        <include layout="@layout/share_to_app_privacy_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <include layout="@layout/cast_to_other_device_privacy_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <include layout="@layout/camera_privacy_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <include layout="@layout/mic_privacy_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/system_bar_mic_privacy_chip" />
+
+        <include layout="@layout/user_name_container"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+</com.android.systemui.car.systembar.base.CarSystemBarView>

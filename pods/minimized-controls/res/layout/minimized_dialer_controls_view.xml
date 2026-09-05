@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2026 The Android Open Source Project
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:padding="@dimen/minimize_controls_padding">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="4"
+        android:background="@drawable/minimized_controls_background">
+
+        <!-- Element 1: Profile Image and App Icon -->
+        <FrameLayout
+            android:id="@+id/dialer_profile_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <ImageView
+                    android:id="@+id/dialer_contact_image"
+                    android:layout_width="@dimen/minimized_controls_button_size"
+                    android:layout_height="@dimen/minimized_controls_button_size"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/minimized_dialer_contact_image_background"
+                    android:clipToOutline="true"
+                    android:src="@android:drawable/sym_contact_card" />
+
+                <FrameLayout
+                    android:layout_width="@dimen/minimized_controls_app_icon_size"
+                    android:layout_height="@dimen/minimized_controls_app_icon_size"
+                    android:layout_gravity="bottom|end"
+                    android:translationX="@dimen/minimized_controls_app_icon_offset"
+                    android:translationY="@dimen/minimized_controls_app_icon_offset"
+                    android:background="@drawable/minimized_controls_app_icon_background">
+                    <ImageView
+                        android:id="@+id/dialer_app_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/minimized_controls_app_icon_outline_thickness"
+                        android:scaleType="fitCenter"
+                        android:background="@drawable/minimized_dialer_app_icon_mask"
+                        android:clipToOutline="true"
+                        android:src="@android:drawable/sym_def_app_icon" />
+                </FrameLayout>
+            </FrameLayout>
+        </FrameLayout>
+
+        <!-- Element 2: Mute Button -->
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:id="@+id/dialer_mute_button"
+                android:layout_width="@dimen/minimized_controls_button_size"
+                android:layout_height="@dimen/minimized_controls_button_size"
+                android:layout_gravity="center"
+                android:padding="@dimen/minimized_controls_icon_padding"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:background="@drawable/minimized_dialer_button_background"
+                android:src="@drawable/minimized_dialer_mute_icon"
+                android:contentDescription="@string/minimized_dialer_mute_description" />
+        </FrameLayout>
+
+        <!-- Element 3: End Call Button -->
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:id="@+id/dialer_end_call_button"
+                android:layout_width="@dimen/minimized_controls_button_size"
+                android:layout_height="@dimen/minimized_controls_button_size"
+                android:layout_gravity="center"
+                android:padding="@dimen/minimized_controls_icon_padding"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:background="@drawable/minimized_dialer_end_call_background"
+                android:src="@drawable/minimized_dialer_ic_call_end"
+                android:contentDescription="@string/minimized_dialer_end_call_description" />
+        </FrameLayout>
+
+        <!-- Element 4: Keypad Button -->
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:id="@+id/dialer_dialpad_button"
+                android:layout_width="@dimen/minimized_controls_button_size"
+                android:layout_height="@dimen/minimized_controls_button_size"
+                android:layout_gravity="center"
+                android:padding="@dimen/minimized_controls_icon_padding"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:background="@drawable/minimized_dialer_button_background"
+                android:src="@drawable/minimized_dialer_ic_dialpad"
+                android:contentDescription="@string/minimized_dialer_keypad_description" />
+        </FrameLayout>
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2018 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License
+  -->
+<resources
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:systemui="http://schemas.android.com/apk/res-auto">
+
+    <!-- The style for the volume icons in the volume dialog. This style makes the icon scale to
+         fit its container since auto wants the icon to be larger. The padding is added to make it
+         so the icon does not press along the edges of the dialog. -->
+    <style name="VolumeButtons" parent="@android:style/Widget.Material.Button.Borderless">
+        <item name="android:background">@drawable/btn_borderless_rect</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">22dp</item>
+    </style>
+
+    <style name="SystemBarClockText">
+        <item name="android:textAppearance">?oemTextAppearanceTitleMedium</item>
+        <item name="android:textColor">@color/system_bar_clock_text_color</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="SystemBarUsernameText">
+        <item name="android:textAppearance">?oemTextAppearanceTitleMedium</item>
+        <item name="android:textColor">@color/system_bar_text_color_with_selection</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColorHint">?oemColorOnSurfaceInverse</item>
+        <item name="android:textColorHighlight">?oemColorOnSurfaceInverse</item>
+        <item name="android:textColorLink">?oemColorOnSurfaceInverse</item>
+    </style>
+
+    <style name="SystemBarButton">
+        <item name="android:layout_height">@dimen/system_bar_button_size</item>
+        <item name="android:layout_width">@dimen/system_bar_button_size</item>
+        <item name="android:layout_marginEnd">0dp</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:padding">@dimen/system_bar_button_padding</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/nav_bar_button_background</item>
+        <item name="unselectedAlpha">1.0</item>
+    </style>
+    <style name="SystemBarButton.Vertical">
+        <item name="android:layout_marginEnd">0dp</item>
+        <item name="android:layout_marginBottom">@dimen/system_bar_button_margin</item>
+    </style>
+
+    <style name="TemperatureControlView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <!--    Todo: update RB to work with these styles -->
+    <style name="HorizontalBarButton">
+        <item name="android:layout_marginTop">@dimen/car_quick_controls_entry_points_button_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/car_quick_controls_entry_points_button_margin_bottom</item>
+        <item name="android:layout_marginStart">@dimen/car_quick_controls_entry_points_button_margin_start</item>
+        <item name="android:layout_marginEnd">@dimen/car_quick_controls_entry_points_button_margin_end</item>
+        <item name="android:background">@drawable/status_icon_background</item>
+        <item name="systemui:yOffset">@dimen/horizontal_bar_button_y_offset</item>
+        <item name="systemui:xOffset">@dimen/horizontal_bar_button_x_offset</item>
+    </style>
+
+    <style name="VerticalBarButton" parent="HorizontalBarButton">
+        <item name="systemui:yOffset">@dimen/vertical_bar_button_y_offset</item>
+        <item name="systemui:xOffset">@dimen/vertical_bar_button_x_offset</item>
+    </style>
+
+    <style name="PrivacyChipPadding">
+        <item name="android:paddingTop">@dimen/car_quick_controls_entry_points_button_margin_top</item>
+        <item name="android:paddingBottom">@dimen/car_quick_controls_entry_points_button_margin_bottom</item>
+        <item name="android:paddingStart">@dimen/car_quick_controls_entry_points_button_margin_start</item>
+        <item name="android:paddingEnd">@dimen/car_quick_controls_entry_points_button_margin_end</item>
+    </style>
+
+    <!-- TextAppearances for ActivityBlockingActivity. -->
+    <style name="ActivityBlockingActivityText">
+        <item name="android:fontFamily">roboto-regular</item>
+        <item name="android:textColor">@color/blocking_text</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/blocking_text_size</item>
+    </style>
+
+    <!-- TextAppearances for Button Text in ActivityBlockingActivity. -->
+    <style name="ActionButtonText" parent="android:TextAppearance.DeviceDefault">
+        <item name="android:fontFamily">roboto-regular</item>
+        <item name="android:textColor">@color/blocking_text</item>
+        <item name="android:textAppearance">?oemTextAppearanceTitleMedium</item>
+    </style>
+
+    <!-- Style for buttons in ActivityBlockingActivity. -->
+    <style name="ButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/activity_blocking_action_button_height</item>
+        <item name="android:minWidth">@dimen/activity_blocking_action_button_min_width</item>
+        <item name="android:maxWidth">@dimen/activity_blocking_action_button_max_width</item>
+        <item name="android:textAppearance">@style/ActionButtonText</item>
+        <item name="android:textColor">@color/blocking_text</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:background">@drawable/activity_blocking_action_button_background</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingHorizontal">@dimen/activity_blocking_action_button_padding_horizontal</item>
+    </style>
+
+    <style name="QCFooterButtonStyle"
+        parent="android:Widget.DeviceDefault.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/car_quick_controls_footer_button_min_height</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginBottom">
+            @dimen/car_quick_controls_footer_button_margin_bottom
+        </item>
+        <item name="android:layout_marginHorizontal">
+            @dimen/car_quick_controls_footer_button_horizontal_margin
+        </item>
+    </style>
+
+    <style name="QCFooterButtonViewStyle">
+        <item name="android:minHeight">@dimen/car_quick_controls_footer_button_min_height</item>
+        <item name="android:background">@drawable/car_quick_controls_pill_button_background</item>
+        <item name="android:layout_marginStart">@dimen/car_padding_2</item>
+        <item name="android:layout_marginEnd">@dimen/car_padding_2</item>
+        <item name="android:padding">
+            @dimen/car_quick_controls_panel_footer_button_view_padding
+        </item>
+    </style>
+
+    <!-- UserPicker -->
+    <!-- Style for message text of user picker alert dialog. -->
+    <style name="UserPickerDialogMessageNormalText">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAppearance">?oemTextAppearanceTitleSmall</item>
+    </style>
+    <style name="UserPickerDialogMessageLargeText">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAppearance">?oemTextAppearanceTitleMedium</item>
+    </style>
+    <!-- Style user picker snackbar. -->
+    <style name="UserPickerSnackBarText" parent="Widget.MaterialComponents.Snackbar.TextView">
+        <item name="android:textAppearance">?oemTextAppearanceTitleMedium</item>
+        <item name="android:textColor">@color/car_ui_text_color_primary</item>
+        <item name="android:textColorPrimary">@color/car_ui_text_color_primary</item>
+        <item name="android:textColorLink">@color/car_ui_text_color_primary</item>
+        <item name="android:layout_margin">@dimen/car_padding_2</item>
+        <item name="android:maxLines">2</item>
+    </style>
+
+    <!-- Biometrics -->
+    <style name="PinPadKey">
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">?oemColorSecondary</item>
+        <item name="android:tint">?oemColorSecondary</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <!-- Passenger Keyguard -->
+    <style name="PassengerLockPattern">
+        <item name="*android:regularColor">?oemColorSurfaceContainerLow</item>
+        <item name="*android:successColor">?oemColorBlue</item>
+        <item name="*android:errorColor">?oemColorError</item>
+    </style>
+
+    <style name="PassengerPinPadKey">
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAppearance">?oemTextAppearanceTitleLarge</item>
+        <item name="android:textColor">?oemColorSecondary</item>
+        <item name="android:tint">?oemColorSecondary</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="CarSystemUIThemeOverlay">
+        <item name="systemBarPillRadius">?oemShapeCornerFull</item>
+        <item name="systemBarPillSelectedRadius">?oemShapeCornerSmall</item>
+        <item name="appPanelBackgroundRadius">?oemShapeCornerExtraLarge</item>
+        <item name="hvacPanelBackgroundRadius">?oemShapeCornerExtraLarge</item>
+        <item name="notificationShadeHandleBarRadius">?oemShapeCornerMedium</item>
+        <item name="notificationShadowRadius">?oemShapeCornerSmall</item>
+        <item name="carStatusIconPanelBorderRadius">?oemShapeCornerLarge</item>
+        <item name="carNavBarButtonSelectedCornerRadius">?oemShapeCornerMedium</item>
+        <item name="hvacPanelHandleBarRadius">?oemShapeCornerMedium</item>
+        <item name="temperatureBarBgRadius">?oemShapeCornerExtraLarge</item>
+        <item name="hvacPanelButtonRadius">?oemShapeCornerExtraLarge</item>
+        <item name="hvacFanSpeedBarCornerRadius">?oemShapeCornerLarge</item>
+        <item name="activityBlockingActionButtonCornerRadius">?oemShapeCornerLarge</item>
+        <item name="displayInputLockBackgroundRadius">?oemShapeCornerExtraSmall</item>
+        <item name="userPickerPillRadius">?oemShapeCornerLarge</item>
+        <item name="pinPadKeyRadius">?oemShapeCornerFull</item>
+        <item name="dataSubscriptionPopUpRadius">?oemShapeCornerMedium</item>
+        <item name="dataSubscriptionPopUpArrowRadius">?oemShapeCornerExtraSmall</item>
+        <item name="clearAllButtonRadius">?oemShapeCornerExtraLarge</item>
+    </style>
+
+    <!-- Styles restored from car-resource-common -->
+    <style name="TextAppearance.Car.Toast" parent="@android:style/TextAppearance.DeviceDefault.Small">
+        <item name="android:textColor">?oemColorOnSurface</item>
+    </style>
+</resources>

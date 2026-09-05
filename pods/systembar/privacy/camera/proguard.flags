@@ -1,0 +1,2 @@
+# Keep CameraQcPanel from being stripped by ProGuard
+-keep class com.android.systemui.car.systembar.privacy.camera.CameraQcPanel { *; }

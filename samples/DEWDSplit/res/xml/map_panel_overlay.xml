@@ -1,0 +1,82 @@
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<DecorPanel id="map_panel_overlay" defaultVariant="@id/expanded_hidden" controller="@xml/map_panel_overlay_controller">
+    <Variant id="@+id/base">
+        <Layer layer="100"/>
+    </Variant>
+
+    <Variant id="@+id/collapsed" parent="@id/base">
+        <Bounds left="2%"
+                top="2%"
+                right="49%"
+                bottom="98%"
+                topOffset="@*android:dimen/status_bar_height"
+                bottomOffset="@*android:dimen/navigation_bar_height"/>
+        <Corner radius="24dp" />
+    </Variant>
+
+    <Variant id="@+id/expanded" parent="@id/base">
+        <Bounds left="0"
+                top="0"
+                right="100%"
+                bottom="100%"
+                topOffset="@*android:dimen/status_bar_height"
+                bottomOffset="@*android:dimen/navigation_bar_height"/>
+    </Variant>
+
+    <Variant id="@+id/collapsed_hidden" parent="@id/collapsed">
+        <Visibility isVisible="false"/>
+    </Variant>
+
+    <Variant id="@+id/expanded_hidden" parent="@id/expanded">
+        <Visibility isVisible="false"/>
+    </Variant>
+
+    <KeyFrameVariant id="@+id/drag" parent="@id/base">
+        <KeyFrame frame="0" variant="@id/collapsed" />
+        <KeyFrame frame="100" variant="@id/expanded" />
+    </KeyFrameVariant>
+
+    <Transitions>
+        <!-- Open the panel once there was a transition on the app_panel -->
+        <Transition fromVariant="@id/expanded_hidden" toVariant="@id/collapsed">
+            <Event id="_System_TaskOpenEvent" panel="app_panel"/>
+        </Transition>
+        <Transition fromVariant="@id/collapsed_hidden" toVariant="@id/expanded">
+            <Event id="_System_TaskPanelEmptyEvent" panel="app_panel"/>
+            <Event id="_System_OnHomeEvent"/>
+        </Transition>
+
+        <!-- Hide the panel once the drag animation completed.  -->
+        <Transition toVariant="@id/collapsed_hidden"
+            onEvent="_System_OnAnimationEndEvent"
+            onEventTokens="panelId=map_panel_overlay;panelToVariantId=collapsed" duration="1" />
+        <Transition toVariant="@id/expanded_hidden"
+            onEvent="_System_OnAnimationEndEvent"
+            onEventTokens="panelId=map_panel_overlay;panelToVariantId=expanded" duration="1" />
+
+        <!-- Drag -->
+        <Transition toVariant="@id/drag">
+            <Event id="_Drag_PanelDragEvent" panelId="grip_bar" />
+        </Transition>
+        <Transition toVariant="@id/collapsed_hidden">
+            <Event id="_Drag_PanelOpenEvent" panelId="grip_bar" />
+        </Transition>
+        <Transition toVariant="@id/expanded_hidden">
+            <Event id="_Drag_PanelCloseEvent" panelId="grip_bar" />
+        </Transition>
+    </Transitions>
+</DecorPanel>

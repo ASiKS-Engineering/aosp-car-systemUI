@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2026, The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<resources>
+    <!-- Timeout value for data subscription pop up in ms -->
+    <integer name="data_subscription_pop_up_timeout">30000</integer>
+    <!-- The interval between 2 popup appearance in days-->
+    <integer name="data_subscription_pop_up_frequency">7</integer>
+    <!-- The number of startup cycles after which the popup is not shown anymore -->
+    <integer name="data_subscription_pop_up_startup_cycle_limit">3</integer>
+    <!-- The number of active days after which the popup is not shown anymore -->
+    <integer name="data_subscription_pop_up_active_days_limit">5</integer>
+</resources>

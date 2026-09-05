@@ -1,0 +1,60 @@
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<DecorPanel id="grip_bar" defaultVariant="@id/closed" controller="@xml/grip_bar_controller">
+    <Variant id="@+id/opened">
+        <Bounds left="49%"
+            bottom="100%"
+            width="2%"
+            top="@*android:dimen/status_bar_height"
+            bottomOffset="@*android:dimen/navigation_bar_height"/>
+    </Variant>
+
+    <Variant id="@+id/closed">
+        <Bounds left="100%"
+            bottom="100%"
+            width="2%"
+            top="@*android:dimen/status_bar_height"
+            bottomOffset="@*android:dimen/navigation_bar_height"/>
+        <Visibility isVisible="false"/>
+    </Variant>
+
+    <KeyFrameVariant id="@+id/drag">
+        <KeyFrame frame="0" variant="@id/opened" />
+        <KeyFrame frame="100" variant="@id/closed" />
+    </KeyFrameVariant>
+
+    <Transitions>
+        <Transition fromVariant="@id/closed" toVariant="@id/opened">
+            <Event id="_System_TaskOpenEvent" panel="app_panel"/>
+        </Transition>
+        <Transition toVariant="@id/closed">
+            <Event id="_System_TaskPanelEmptyEvent" panel="app_panel"/>
+            <Event id="_System_OnHomeEvent"/>
+        </Transition>
+
+        <!-- Drag -->
+
+        <Transition toVariant="@id/drag">
+            <Event id="_Drag_PanelDragEvent" panelId="grip_bar" />
+        </Transition>
+        <Transition toVariant="@id/opened">
+            <Event id="_Drag_PanelOpenEvent" panelId="grip_bar" />
+        </Transition>
+        <Transition toVariant="@id/closed">
+            <Event id="_Drag_PanelCloseEvent" panelId="grip_bar" />
+        </Transition>
+    </Transitions>
+</DecorPanel>

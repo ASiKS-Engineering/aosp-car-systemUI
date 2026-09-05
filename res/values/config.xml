@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2018 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License
+  -->
+<resources>
+    <!-- How many milliseconds to wait before force hiding the UserSwitchTransitionView -->
+    <integer name="config_userSwitchTransitionViewShownTimeoutMs" translatable="false">5000
+    </integer>
+
+    <!-- Configure which system bars should be displayed. -->
+    <bool name="config_enableTopSystemBar">true</bool>
+    <bool name="config_enableLeftSystemBar">false</bool>
+    <bool name="config_enableRightSystemBar">false</bool>
+    <bool name="config_enableBottomSystemBar">true</bool>
+
+    <!-- Configure the type of each system bar. -->
+    <!--    STATUS_BAR = 0-->
+    <!--    NAVIGATION_BAR = 1-->
+    <integer name="config_topSystemBarType">0</integer>
+    <integer name="config_leftSystemBarType">0</integer>
+    <integer name="config_rightSystemBarType">1</integer>
+    <integer name="config_bottomSystemBarType">1</integer>
+
+    <!-- Location of the system bar privacy indicator. This value should be consistent with the
+         system  bar where the view for system bar privacy indicator is put. -->
+    <!-- For example the view is put in system bar with the name "status", this value should be
+         status. -->
+    <string name="config_privacyIndicatorLocation">TopCarSystemBar</string>
+
+    <!-- Configure the relative z-order among the system bars. When two system bars overlap (e.g.
+         if both top bar and left bar are enabled, it creates an overlapping space in the upper left
+         corner), the system bar with the higher z-order takes the overlapping space and padding is
+         applied to the other bar.-->
+    <!-- NOTE: If two overlapping system bars have the same z-order, SystemBarConfigs will throw a
+         RuntimeException, since their placing order cannot be determined. Bars that do not overlap
+         are allowed to have the same z-order. -->
+    <!-- NOTE: If the z-order of a bar is 10 or above, it will also appear on top of HUN's.    -->
+    <integer name="config_topSystemBarZOrder">1</integer>
+    <integer name="config_leftSystemBarZOrder">0</integer>
+    <integer name="config_rightSystemBarZOrder">0</integer>
+    <integer name="config_bottomSystemBarZOrder">10</integer>
+
+    <!-- If set to true, the corresponding system bar will be hidden when Keyboard (IME) appears.
+         NOTE: hideBottomSystemBarKeyboard must not be overlaid directly here. To change its value,
+         overlay config_hideNavBarForKeyboard in framework/base/core/res/res. -->
+    <bool name="config_hideTopSystemBarForKeyboard">false</bool>
+    <bool name="config_hideLeftSystemBarForKeyboard">false</bool>
+    <bool name="config_hideRightSystemBarForKeyboard">false</bool>
+    <bool name="config_hideBottomSystemBarForKeyboard">@*android:bool/config_hideNavBarForKeyboard</bool>
+
+    <!-- If set to false, requests CarSystemBarViews to not intercept touch events to make it easier
+        to touch the buttons without accidentally expanding the notification panel.-->
+    <bool name="config_systemBarButtonsDraggable">false</bool>
+
+    <!-- Whether navigationBar touch events should be consumed before reaching the CarFacetButton \
+         when the notification panel is open. -->
+    <bool name="config_consumeSystemBarTouchWhenNotificationPanelOpen">false</bool>
+
+    <!-- Whether or not the profile panel should be disabled while driving. -->
+    <bool name="config_profile_panel_disabled_while_driving">true</bool>
+
+    <!-- Car System UI's OverlayViewsMediator.
+         Whenever a new class is added, make sure to also add that class to OverlayWindowModule. -->
+    <string-array name="config_carSystemUIOverlayViewsMediators" translatable="false">
+        <item>@string/config_notificationPanelViewMediator</item>
+        <item>com.android.systemui.car.hvac.HvacPanelOverlayViewMediator</item>
+        <item>com.android.systemui.car.keyguard.CarKeyguardOverlayViewMediator</item>
+        <item>com.android.systemui.car.keyguard.passenger.PassengerKeyguardOverlayViewMediator</item>
+        <item>com.android.systemui.car.systemdialogs.SystemDialogsViewMediator</item>
+        <item>com.android.systemui.car.userswitcher.FullscreenUserSwitcherViewMediator</item>
+        <item>com.android.systemui.car.userswitcher.UserSwitchTransitionViewMediator</item>
+    </string-array>
+
+    <!-- List of package names that are allowed sources of app installation. -->
+    <string-array name="config_allowedAppInstallSources" translatable="false">
+        <item>com.android.vending</item>
+    </string-array>
+
+    <!-- Defines system icons to be excluded from the display. That is to say, the icons in the
+         status bar that are part of this list are never displayed. Each item in the list must be a
+         string defined in core/res/res/config.xml to properly exclude the icon.
+     -->
+    <string-array name="config_statusBarIconsToExclude" translatable="false">
+        <item>@*android:string/status_bar_rotate</item>
+        <item>@*android:string/status_bar_headset</item>
+        <item>@*android:string/status_bar_microphone</item>
+    </string-array>
+
+    <!-- Packages that can post toasts even if it isn't a system application. -->
+    <string-array name="config_restrictedToastsPackageNameAllowList" translatable="false">
+        <!-- These packages may be used for CTS purposes. -->
+        <item>android.widget.cts</item>
+        <item>android.server.wm.app</item>
+        <item>android.server.wm.cts</item>
+        <item>android.server.wm.second</item>
+        <item>com.android.cts.verifier</item>
+    </string-array>
+
+    <!-- Specifies the component name of the home activity -->
+    <string name="config_homeComponentName" translatable="false">com.android.car.carlauncher/.CarLauncher</string>
+
+    <!-- Specifies the panel visibilities that comprise the home scene -->
+    <string name="config_homePanelVisibilities" translatable="false"></string>
+
+    <!-- Specifies the panel visibilities that comprise the app grid open scene -->
+    <string name="config_appGridPanelVisibilities" translatable="false"></string>
+
+    <!-- Specifies the event id to be fired when the app grid is clicked while selected -->
+    <string name="config_appGridSelectedClickEvent" translatable="false"></string>
+
+    <!-- Specifies the component name of the app grid activity -->
+    <string name="config_appGridComponentName" translatable="false">com.android.car.carlauncher/.AppGridActivity</string>
+
+    <!-- Specifies the component name of the AAOS Studio activity -->
+    <string name="config_aaosStudioComponentName" translatable="false">com.android.aaos.studio/.TokenActivity</string>
+
+    <!-- Determines whether the shell features all run on another thread. -->
+    <bool name="config_enableShellMainThread">true</bool>
+
+    <!-- Determines whether the shell task organizer be registered automatiacly or not.
+         It needs to be disabled for CarSystemUI as CarLauncher already registers one. With 2
+         organizers there can be recovery problems if either of the process crashes. -->
+    <!-- TODO(b/228598071): Enabled this to fix b/250675259. -->
+    <bool name="config_registerShellTaskOrganizerOnInit">true</bool>
+
+    <!-- disable standard privacy chip animation (only show immersive) -->
+    <bool name="config_enablePrivacyChipAnimation">false</bool>
+    <!-- show the privacy chip indicator in full screen mode. -->
+    <bool name="config_enableImmersivePrivacyChip">true</bool>
+
+    <!-- Determines whether the car system UI should register the System UI Proxy with the
+     CarService. -->
+    <bool name="config_registerCarSystemUIProxy">true</bool>
+
+    <!-- Determines whether the secondary user SystemUI must be overlaid -->
+    <bool name="config_enableSecondaryUserRRO">true</bool>
+    <!-- RRO package name of the secondary user SystemUI -->
+    <string name="config_secondaryUserSystemUIRROPackageName">
+        com.android.systemui.md.passenger.car.rro
+    </string>
+
+    <!-- App drawer system bar button intent -->
+    <string name="system_bar_app_drawer_intent" translatable="false">intent:#Intent;action=com.android.car.carlauncher.ACTION_APP_GRID;launchFlags=0x24000000;end</string>
+    <!-- Determines whether Recents entry point should be shown / should trigger to open Recents -->
+
+    <!-- set to false to use the default TaskDisplayArea -->
+    <!-- TODO(b/300930725): launcher doesn't show until it's restarted -->
+    <bool name="config_useRemoteLaunchTaskView">false</bool>
+
+    <!-- Determines how to show navigation bar and status bar on app's immersive request, only
+        works if config_remoteInsetsControllerControlsSystemBars is set to true-->
+    <!-- 0 non_immersive show all system bars on immersive request. -->
+    <!-- 1 immersive, hide both bars -->
+    <!-- 2 immersive_with_nav, show nav bar and hide status bar -->
+    <!-- 3 immersive based on bar control policy  -->
+    <integer name="config_systemBarPersistency">1</integer>
+
+    <!--
+        Provides a backup value for the system bar visibility override policy. This value is used
+        when config_systemBarPersistency is set to use the bar policy and the
+        CarSettings.Global.SYSTEM_BAR_VISIBILITY_OVERRIDE global setting is not configured.
+        The value should be a valid policy control string, e.g., "immersive.full=*".
+    -->
+    <string name="system_bar_visibility_override_backup" />
+
+    <!-- Determines if the system bars should be forced into a particular system bar behavior when
+         the Setup Wizard is currently in progress. This config only takes effect if
+         config_remoteInsetsControllerControlsSystemBars is set to true and will supplement the
+         behavior of config_systemBarPersistency. -->
+    <!-- 0 disabled - will not modify config_systemBarPersistency behavior for SUW. -->
+    <!-- 1 immersive, force hide both bars for SUW -->
+    <!-- 2 immersive_with_nav, force show nav bar and hide status bar for SUW -->
+    <!-- 3 immersive_with_status, force show status bar and hide nav bar for SUW  -->
+    <integer name="config_systemBarSuwBehavior">0</integer>
+
+    <!-- Blocking activity feature flag -->
+    <bool name="config_enableAppBlockingActivities">true</bool>
+
+    <!-- Dialer blocking activity component name -->
+    <string name="config_dialerBlockingActivity" translatable="false">com.android.car.dialer/.ui.activecall.InCallActivity</string>
+
+    <!-- Media blocking activity component name -->
+    <string name="config_mediaBlockingActivity" translatable="false">com.android.car.media/.MediaBlockingActivity</string>
+
+    <!--
+       The devices that certain debug features should be shown on.
+       Emulators are included by default.
+   -->
+    <string-array name="config_debug_support_devices">
+    </string-array>
+    <!--
+        The devices that certain debug features should be shown on, but the builds on real vehicles
+        should be excluded.
+    -->
+    <string-array name="config_debug_support_devices_exclude_car">
+    </string-array>
+
+    <!--
+        Enable the clear back stack feature on the CarSystemBarButtons.  This feature should be
+        disabled when scalableUi feature is enabled.
+    -->
+    <bool name="config_enableClearBackStack">false</bool>
+
+    <!-- Enable the ScalableUI feature - this configuration toggle is only valid if the ScalableUI
+         feature flag is also enabled. -->
+    <bool name="config_enableScalableUI">true</bool>
+
+    <!-- The entry point for panel definition of scalableUI feature.  -->
+    <array name="window_states">
+    </array>
+
+    <!--
+        List of activity names that should not be considered trimmable by the system.
+        Used when scalableUi feature is enabled.
+    -->
+    <string-array name="config_untrimmable_activities" translatable="false">
+    </string-array>
+
+    <!--
+        Component names that will not trigger events by default when launched.
+        Used when scalableUi feature is enabled.
+    -->
+    <string-array name="config_ignoredEventActivities" translatable="false">
+        <item>com.android.systemui/.car.wm.activity.ActivityBlockingActivity</item>
+        <item>@string/config_mediaBlockingActivity</item>
+    </string-array>
+
+    <!--
+        List of system bar names that should register HvacPanelOverlayViewController's
+        DragCloseTouchListener
+    -->
+    <string-array name="config_registerHvacDragCloseListener" translatable="false">
+        <item>TopCarSystemBar</item>
+        <item>BottomCarSystemBar</item>
+        <item>LeftCarSystemBar</item>
+        <item>RightCarSystemBar</item>
+    </string-array>
+
+    <!--
+        Specifies the default activities associated with different panel IDs.
+
+        This string array defines the default activity to launch for panels. Each item in the array
+        represents a mapping between a panel ID and its corresponding activity.
+        The format of each item is: "panel_id;activity_component_name".
+        - `panel_id`:  The ID of the panel (e.g., "app_grid_panel", "map_panel").
+        - `activity_component_name`: The fully qualified component name of the activity to launch
+           for that panel.
+    -->
+    <string-array name="config_default_activities" translatable="false">
+    </string-array>
+
+    <!-- Enable toolkit for data subscription. -->
+    <bool name="config_enableDataSubscriptionToolkit">true</bool>
+
+    <!-- Setup and add safe area and toolbar per display on for Display Compat apps . -->
+    <bool name="config_enableSafeAreaAndToolbarPerDisplay">true</bool>
+
+    <!-- Figma file ID for the DCF file used to load system ui -->
+    <string name="config_scalableUiDcfFileId">cydzv1nh1pZBdFmZAbdFQU</string>
+
+    <!-- Whether the size compat restart button should be enabled -->
+    <bool name="config_isSizeCompatRestartButtonEnabled">false</bool>
+
+    <!-- Settings package name to be used as a default/fallback if no other settings packages are found -->
+    <string name="config_defaultSettingsPackage">com.android.car.settings</string>
+</resources>

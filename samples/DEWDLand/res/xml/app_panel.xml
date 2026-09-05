@@ -1,0 +1,60 @@
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<TaskPanel id="app_panel" defaultVariant="@id/closed" role="@string/default_config" displayId="0">
+    <Variant id="@+id/base">
+        <Layer layer="100"/>
+    </Variant>
+    <Variant id="@+id/opened" parent="@id/base">
+        <Bounds left="0" top="0" topOffset="@*android:dimen/status_bar_height" width="100%" bottom="100%" bottomOffset="@*android:dimen/navigation_bar_height"/>
+        <SafeBounds left="0" leftOffset="@dimen/toolbar_width" top="0" topOffset="@*android:dimen/status_bar_height" right="100%" bottom="100%" bottomOffset="@*android:dimen/navigation_bar_height" />
+        <Visibility isVisible="true"/>
+        <Alpha alpha="1.0"/>
+        <TaskToolbarBounds left="0" top="0" width="@dimen/toolbar_width" bottom="100%" topOffset="@*android:dimen/status_bar_height" bottomOffset="@*android:dimen/navigation_bar_height" />
+    </Variant>
+    <Variant id="@+id/closed" parent="@id/base">
+        <Bounds left="100%" top="0" topOffset="@*android:dimen/status_bar_height" width="100%" bottom="100%" bottomOffset="@*android:dimen/navigation_bar_height"/>
+        <SafeBounds left="100%" leftOffset="@dimen/toolbar_width" top="0" topOffset="@*android:dimen/status_bar_height" right="200%" bottom="100%" bottomOffset="@*android:dimen/navigation_bar_height"/>
+        <Visibility isVisible="false"/>
+        <Alpha alpha="0.0"/>
+        <TaskToolbarBounds left="100%" top="0" width="@dimen/toolbar_width" bottom="100%" topOffset="@*android:dimen/status_bar_height" bottomOffset="@*android:dimen/navigation_bar_height" />
+    </Variant>
+
+    <Variant id="@+id/suw_open" parent="@id/opened">
+        <Layer layer="155"/>
+        <Bounds left="0" bottom="100%" width="100%" height="100%"/>
+    </Variant>
+
+    <Variant id="@+id/suw_close" parent="@id/opened">
+        <Visibility isVisible="false"/>
+    </Variant>
+
+    <Transitions defaultInterpolator="@android:anim/decelerate_interpolator">
+        <Transition onEvent="_System_EnterSuwEvent" toVariant="@id/suw_close"/>
+        <Transition onEvent="_System_ExitSuwEvent" fromVariant="@id/suw_open" toVariant="@id/closed"/>
+        <Transition onEvent="_System_ExitSuwEvent" fromVariant="@id/suw_close" toVariant="@id/closed"/>
+
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=app_panel" fromVariant="@id/suw_close" toVariant="@id/suw_open"/>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=app_panel" fromVariant="@id/closed" toVariant="@id/opened"/>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=map_panel" fromVariant="@id/opened" toVariant="@id/closed"/>
+
+        <Transition onEvent="_System_TaskCloseEvent" onEventTokens="panelId=app_panel" fromVariant="@id/suw_open" toVariant="@id/suw_close"/>
+
+        <Transition onEvent="_System_OnHomeEvent" fromVariant="@id/opened" toVariant="@id/closed"/>
+        <Transition onEvent="_System_TaskPanelEmptyEvent" onEventTokens="panelId=app_panel" fromVariant="@id/opened" toVariant="@id/closed"/>
+
+        <Transition onEvent="_System_BeforeUserSwitch" toVariant="@id/closed"/>
+    </Transitions>
+</TaskPanel>

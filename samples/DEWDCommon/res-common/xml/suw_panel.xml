@@ -1,0 +1,37 @@
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+  <TaskPanel id="suw_panel" defaultVariant="@id/closed" displayId="0" controller="@xml/suw_panel_controller">
+    <TaskBehavior newTaskLaunchPolicy="REPARENT_TO_SOURCE"/>
+    <Variant id="@+id/base">
+        <Layer layer="@integer/suw_panel_layer"/>
+        <Bounds left="0" top="0" width="100%" height="100%" />
+        <!-- TODO(b/435347522): enable background once flag is rolled out -->
+        <!-- <Background color="@color/app_panel_background_color" />-->
+    </Variant>
+    <Variant id="@+id/opened" parent="@id/base">
+        <Visibility isVisible="true"/>
+    </Variant>
+    <Variant id="@+id/closed" parent="@id/base">
+        <Visibility isVisible="false"/>
+    </Variant>
+
+    <Transitions>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=suw_panel" toVariant="@id/opened"/>
+        <Transition onEvent="_System_TaskPanelEmptyEvent" onEventTokens="panelId=suw_panel" toVariant="@id/closed"/>
+        <Transition onEvent="_System_EnterSuwEvent" toVariant="@id/opened"/>
+        <Transition onEvent="_System_ExitSuwEvent" toVariant="@id/closed"/>
+    </Transitions>
+</TaskPanel>

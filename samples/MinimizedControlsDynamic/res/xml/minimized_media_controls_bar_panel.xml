@@ -1,0 +1,112 @@
+<!--
+    Copyright (C) 2026 The Android Open Source Project
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    you may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<DecorPanel id="minimized_media_controls_panel" defaultVariant="@id/media_hidden_by_blocking_panel" displayId="0" controller="@xml/minimized_media_controls_controller">
+    <Variant id="@id/base">
+        <Layer layer="@integer/app_panel_layer"/>
+    </Variant>
+
+    <Variant id="@id/open" parent="@id/base">
+        <Visibility isVisible="true"/>
+        <Bounds
+            left="0"
+            width="100%"
+            height="@dimen/navigation_bar_height"
+            bottom="100%"
+            bottomOffset="@dimen/navigation_bar_height"/>
+    </Variant>
+
+    <Variant id="@id/closed" parent="@id/base">
+        <Visibility isVisible="false"/>
+        <Bounds
+            left="0"
+            top="100%"
+            width="100%"
+            height="@dimen/navigation_bar_height"/>
+    </Variant>
+
+    <Variant id="@+id/media_opened" parent="@id/open"/>
+    <Variant id="@+id/media_hidden_by_blocking_panel" parent="@id/closed"/>
+    <Variant id="@+id/media_hidden_by_call" parent="@id/closed"/>
+    <Variant id="@+id/media_hidden_by_both" parent="@id/closed"/>
+
+    <KeyFrameVariant id="@+id/drag" parent="@id/base">
+        <KeyFrame frame="0" variant="@id/open" />
+        <KeyFrame frame="100" variant="@id/closed" />
+    </KeyFrameVariant>
+
+    <Transitions>
+        <!-- Call Events -->
+        <Transition onEvent="_System_Call_Connected" fromVariant="@id/media_opened" toVariant="@id/media_hidden_by_call"/>
+        <Transition onEvent="_System_Call_Connected" fromVariant="@id/media_hidden_by_blocking_panel" toVariant="@id/media_hidden_by_both"/>
+
+        <Transition onEvent="_System_Call_Disconnected" fromVariant="@id/media_hidden_by_call" toVariant="@id/media_opened"/>
+        <Transition onEvent="_System_Call_Disconnected" fromVariant="@id/media_hidden_by_both" toVariant="@id/media_hidden_by_blocking_panel"/>
+
+        <!-- Blocker Opens: Widget, Home, Map -->
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=widget_panel" fromVariant="@id/media_opened" toVariant="@id/media_hidden_by_blocking_panel"/>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=widget_panel" fromVariant="@id/media_hidden_by_call" toVariant="@id/media_hidden_by_both"/>
+
+        <Transition onEvent="_System_OnHomeEvent" fromVariant="@id/media_opened" toVariant="@id/media_hidden_by_blocking_panel"/>
+        <Transition onEvent="_System_OnHomeEvent" fromVariant="@id/media_hidden_by_call" toVariant="@id/media_hidden_by_both"/>
+
+        <!-- Blocker Closes: Widget, Map -->
+        <Transition onEvent="_System_TaskCloseEvent" onEventTokens="panelId=widget_panel" fromVariant="@id/media_hidden_by_blocking_panel" toVariant="@id/media_opened"/>
+        <Transition onEvent="_System_TaskCloseEvent" onEventTokens="panelId=widget_panel" fromVariant="@id/media_hidden_by_both" toVariant="@id/media_hidden_by_call"/>
+
+        <!-- Unblocker Opens: App, Grid -->
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=app_panel" fromVariant="@id/media_hidden_by_blocking_panel" toVariant="@id/media_opened"/>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=app_panel" fromVariant="@id/media_hidden_by_both" toVariant="@id/media_hidden_by_call"/>
+
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=panel_app_grid" fromVariant="@id/media_hidden_by_blocking_panel" toVariant="@id/media_opened"/>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=panel_app_grid" fromVariant="@id/media_hidden_by_both" toVariant="@id/media_hidden_by_call"/>
+
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=map_panel" fromVariant="@id/media_opened" toVariant="@id/media_hidden_by_blocking_panel"/>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=map_panel" fromVariant="@id/media_hidden_by_call" toVariant="@id/media_hidden_by_both"/>
+
+        <!-- Unblocker Closes: App, Grid -->
+        <Transition onEvent="_System_TaskCloseEvent" onEventTokens="panelId=app_panel" fromVariant="@id/media_opened" toVariant="@id/media_hidden_by_blocking_panel"/>
+        <Transition onEvent="_System_TaskCloseEvent" onEventTokens="panelId=app_panel" fromVariant="@id/media_hidden_by_call" toVariant="@id/media_hidden_by_both"/>
+
+        <Transition onEvent="_System_TaskCloseEvent" onEventTokens="panelId=panel_app_grid" fromVariant="@id/media_opened" toVariant="@id/media_hidden_by_blocking_panel"/>
+        <Transition onEvent="_System_TaskCloseEvent" onEventTokens="panelId=panel_app_grid" fromVariant="@id/media_hidden_by_call" toVariant="@id/media_hidden_by_both"/>
+
+        <Transition onEvent="_System_TaskCloseEvent" onEventTokens="panelId=map_panel" fromVariant="@id/media_hidden_by_blocking_panel" toVariant="@id/media_opened"/>
+        <Transition onEvent="_System_TaskCloseEvent" onEventTokens="panelId=map_panel" fromVariant="@id/media_hidden_by_both" toVariant="@id/media_hidden_by_call"/>
+
+        <!-- Sync drag with app panel's grip, exclusively from the open state -->
+        <Transition fromVariant="@id/media_opened" toVariant="@id/drag">
+            <Event id="_Drag_PanelDragEvent" panelId="decor_grip" />
+            <Event id="_Drag_PanelDragEvent" panelId="decor_grip_app" />
+        </Transition>
+        <Transition fromVariant="@id/drag" toVariant="@id/media_hidden_by_blocking_panel">
+            <Event id="_Drag_PanelCloseEvent" panelId="decor_grip" />
+            <Event id="_Drag_PanelCloseEvent" panelId="decor_grip_app" />
+        </Transition>
+        <Transition fromVariant="@id/drag" toVariant="@id/media_opened">
+            <Event id="_Drag_PanelOpenEvent" panelId="decor_grip" />
+            <Event id="_Drag_PanelOpenEvent" panelId="decor_grip_app" />
+        </Transition>
+
+        <!-- Handle system events that may occur while dragging -->
+        <Transition onEvent="_System_Call_Connected" fromVariant="@id/drag" toVariant="@id/media_hidden_by_call"/>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=widget_panel" fromVariant="@id/drag" toVariant="@id/media_hidden_by_blocking_panel"/>
+        <Transition onEvent="_System_OnHomeEvent" fromVariant="@id/drag" toVariant="@id/media_hidden_by_blocking_panel"/>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=map_panel" fromVariant="@id/drag" toVariant="@id/media_hidden_by_blocking_panel"/>
+        <Transition onEvent="_System_TaskCloseEvent" onEventTokens="panelId=app_panel" fromVariant="@id/drag" toVariant="@id/media_hidden_by_blocking_panel"/>
+        <Transition onEvent="_System_TaskCloseEvent" onEventTokens="panelId=panel_app_grid" fromVariant="@id/drag" toVariant="@id/media_hidden_by_blocking_panel"/>
+    </Transitions>
+</DecorPanel>

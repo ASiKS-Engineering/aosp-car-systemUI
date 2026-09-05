@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2025, The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<resources>
+    <!-- HVAC area ID that represents the associated property affecting the entire vehicle
+      (e.g. HVAC Power On/Off affects the entire vehicle.) -->
+    <integer name="hvac_global_area_id">117</integer>
+    <!-- The total number of seat heat levels supported by VHAL. -->
+    <integer name="hvac_seat_heat_level_count">4</integer>
+
+    <!-- The minimum fan speed value.-->
+    <integer name="hvac_min_fan_speed">1</integer>
+    <!-- The maximum fan speed value. -->
+    <integer name="hvac_max_fan_speed">6</integer>
+
+    <!-- The upper bounds for background colors used in Adjustable Background Temperature Control
+    View. Note that these integers should be in Celsius and will be divided by 10 so that the first
+    decimal can be expressed. The corresponding background color for each level is defined in
+    arrays.xml (see hvac_temperature_level_backgrounds). -->
+    <integer-array name="hvac_temperature_control_levels">
+        <item>9999</item>
+    </integer-array>
+</resources>

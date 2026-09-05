@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2026 The Android Open Source Project
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<DecorPanel id="minimized_dialer_controls_panel"
+            defaultVariant="@id/widget_open_no_call"
+            displayId="0"
+            controller="@xml/minimized_dialer_controls_controller">
+    <Variant id="@id/base">
+        <Layer layer="102"/>
+    </Variant>
+
+    <Variant id="@id/open" parent="@id/base">
+        <Visibility isVisible="true"/>
+        <Bounds
+            left="@dimen/minimized_controls_left"
+            width="@dimen/minimized_controls_width"
+            bottom="100%"
+            height="@dimen/navigation_bar_height"/>
+    </Variant>
+
+    <Variant id="@id/closed" parent="@id/base">
+        <Visibility isVisible="false"/>
+        <Bounds
+            left="@dimen/minimized_controls_left"
+            top="100%"
+            width="@dimen/minimized_controls_width"
+            height="@dimen/navigation_bar_height"/>
+    </Variant>
+
+    <Variant id="@+id/widget_open_no_call" parent="@id/closed"/>
+    <Variant id="@+id/widget_open_call_active" parent="@id/closed"/>
+
+    <Transitions>
+        <Transition onEvent="_System_Call_Connected" fromVariant="@id/closed" toVariant="@id/open"/>
+        <Transition onEvent="_System_Call_Connected" fromVariant="@id/widget_open_no_call" toVariant="@id/widget_open_call_active"/>
+
+        <Transition onEvent="_System_Call_Disconnected" fromVariant="@id/open" toVariant="@id/closed"/>
+        <Transition onEvent="_System_Call_Disconnected" fromVariant="@id/widget_open_call_active" toVariant="@id/widget_open_no_call"/>
+
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=widget_panel" fromVariant="@id/closed" toVariant="@id/widget_open_no_call"/>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=widget_panel" fromVariant="@id/open" toVariant="@id/widget_open_call_active"/>
+
+        <Transition onEvent="_System_TaskCloseEvent" onEventTokens="panelId=widget_panel" fromVariant="@id/widget_open_no_call" toVariant="@id/closed"/>
+        <Transition onEvent="_System_TaskCloseEvent" onEventTokens="panelId=widget_panel" fromVariant="@id/widget_open_call_active" toVariant="@id/open"/>
+
+        <Transition onEvent="_System_OnHomeEvent" fromVariant="@id/closed" toVariant="@id/widget_open_no_call"/>
+        <Transition onEvent="_System_OnHomeEvent" fromVariant="@id/open" toVariant="@id/widget_open_call_active"/>
+
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=app_panel" fromVariant="@id/widget_open_no_call" toVariant="@id/closed"/>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=app_panel" fromVariant="@id/widget_open_call_active" toVariant="@id/open"/>
+
+        <Transition onEvent="_System_TaskCloseEvent" onEventTokens="panelId=app_panel" fromVariant="@id/closed" toVariant="@id/widget_open_no_call"/>
+        <Transition onEvent="_System_TaskCloseEvent" onEventTokens="panelId=app_panel" fromVariant="@id/open" toVariant="@id/widget_open_call_active"/>
+
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=map_panel" fromVariant="@id/closed" toVariant="@id/widget_open_no_call"/>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=map_panel" fromVariant="@id/open" toVariant="@id/widget_open_call_active"/>
+
+        <Transition onEvent="_System_TaskCloseEvent" onEventTokens="panelId=map_panel" fromVariant="@id/widget_open_no_call" toVariant="@id/closed"/>
+        <Transition onEvent="_System_TaskCloseEvent" onEventTokens="panelId=map_panel" fromVariant="@id/widget_open_call_active" toVariant="@id/open"/>
+    </Transitions>
+</DecorPanel>

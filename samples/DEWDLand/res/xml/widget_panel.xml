@@ -1,0 +1,55 @@
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<TaskPanel id="widget_panel" defaultVariant="@id/opened" displayId="0" controller="@xml/widget_panel_controller">
+    <Restart policy="DEFAULT" maxRetry="3"/>
+    <TaskBehavior taskProperties="UNTRIMMABLE"/>
+    <Variant id="@+id/base">
+        <Layer layer="2"/>
+        <Bounds
+            left="0"
+            width="@dimen/widget_panel_width"
+            top="0"
+            topOffset="@*android:dimen/status_bar_height"
+            bottom="100%"
+            bottomOffset="@*android:dimen/navigation_bar_height" />
+            <Focus onTransition="false" />
+    </Variant>
+    <Variant id="@+id/opened" parent="@id/base">
+        <Visibility isVisible="true"/>
+    </Variant>
+    <Variant id="@+id/closed" parent="@id/base">
+        <Visibility isVisible="false"/>
+    </Variant>
+    <Variant id="@+id/suw" parent="@id/closed" />
+    <Variant id="@+id/userswitch" parent="@id/closed" />
+    <Variant id="@+id/keyguard_opened" parent="@id/closed" />
+
+    <Transitions>
+        <Transition onEvent="_System_EnterSuwEvent" toVariant="@id/suw"/>
+        <Transition onEvent="_System_ExitSuwEvent" fromVariant="@id/suw" toVariant="@id/opened"/>
+        <Transition onEvent="_System_OnHomeEvent" fromVariant="@id/closed" toVariant="@id/opened"/>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=app_panel" fromVariant="@id/opened" toVariant="@id/closed"/>
+        <Transition onEvent="_System_TaskPanelEmptyEvent" onEventTokens="panelId=app_panel" fromVariant="@id/closed" toVariant="@id/opened"/>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=map_panel" fromVariant="@id/closed" toVariant="@id/opened"/>
+
+        <!-- User Switch -->
+        <Transition onEvent="_System_BeforeUserSwitch" toVariant="@id/userswitch"/>
+        <Transition onEvent="_System_UserSwitchComplete" fromVariant="@id/userswitch" toVariant="@id/opened"/>
+        <!-- Keyguard -->
+        <Transition onEvent="_System_KeyguardShown" toVariant="@id/keyguard_opened"/>
+        <Transition onEvent="_System_KeyguardHidden" fromVariant="@id/keyguard_opened" toVariant="@id/opened"/>
+    </Transitions>
+</TaskPanel>

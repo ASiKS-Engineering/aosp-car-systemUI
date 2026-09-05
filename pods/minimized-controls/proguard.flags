@@ -1,0 +1,4 @@
+-keep class com.android.systemui.car.minimizedcontrols.MinimizedMediaControlsView { *; }
+-keep class com.android.systemui.car.minimizedcontrols.MinimizedMediaControlsPanelController { *; }
+-keep class com.android.systemui.car.minimizedcontrols.MinimizedDialerControlsView { *; }
+-keep class com.android.systemui.car.minimizedcontrols.MinimizedDialerControlsPanelController { *; }

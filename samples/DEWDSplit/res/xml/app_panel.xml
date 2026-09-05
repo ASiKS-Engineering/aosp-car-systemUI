@@ -1,0 +1,114 @@
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<TaskPanel id="app_panel" defaultVariant="@id/closed" role="@string/default_config">
+    <Variant id="@+id/base">
+        <Corner radius="24dp" />
+    </Variant>
+
+    <Variant id="@+id/opened" parent="@id/base">
+        <Bounds left="51%"
+            top="2%"
+            right="95%"
+            bottom="98%"
+            topOffset="@*android:dimen/status_bar_height"
+            bottomOffset="@*android:dimen/navigation_bar_height"/>
+        <SafeBounds left="51%"
+            top="2%"
+            right="95%"
+            bottom="98%"
+            topOffset="@dimens/app_toolbar_and_status_bar_height"
+            bottomOffset="@*android:dimen/navigation_bar_height" />
+        <TaskToolbarBounds left="51%"
+            top="2%"
+            right="95%"
+            height="@dimen/app_toolbar_height"
+            topOffset="@dimens/app_toolbar_and_status_bar_height"/>
+    </Variant>
+
+    <Variant id="@+id/immersive" parent="@id/base">
+        <Bounds left="0%"
+            top="0%"
+            right="100%"
+            bottom="100%"/>
+        <SafeBounds left="0%"
+            top="0%"
+            right="100%"
+            bottom="100%"
+            topOffset="@dimens/app_toolbar_height"/>
+        <TaskToolbarBounds left="0%"
+            top="0%"
+            right="100%"
+            height="@dimen/app_toolbar_height"/>
+    </Variant>
+
+    <Variant id="@+id/closed" parent="@id/base">
+        <Bounds left="102%"
+            top="2%"
+            right="146%"
+            bottom="98%"
+            topOffset="@*android:dimen/status_bar_height"
+            bottomOffset="@*android:dimen/navigation_bar_height"/>
+        <SafeBounds left="102%"
+            top="2%"
+            right="146%"
+            bottom="98%"
+            topOffset="@dimens/app_toolbar_and_status_bar_height"
+            bottomOffset="@*android:dimen/navigation_bar_height" />
+        <TaskToolbarBounds left="102%"
+            top="2%"
+            right="146%"
+            height="@dimen/app_toolbar_height"
+            topOffset="@dimens/app_toolbar_and_status_bar_height"/>
+        <Visibility isVisible="false"/>
+    </Variant>
+
+    <KeyFrameVariant id="@+id/drag">
+        <KeyFrame frame="0" variant="@id/opened" />
+        <KeyFrame frame="100" variant="@id/closed" />
+    </KeyFrameVariant>
+
+    <Transitions>
+        <Transition fromVariant="@id/closed" toVariant="@id/opened">
+            <Event id="_System_TaskOpenEvent" panel="app_panel"/>
+        </Transition>
+        <Transition toVariant="@id/closed">
+            <Event id="_System_TaskPanelEmptyEvent" panel="app_panel"/>
+            <Event id="_System_OnHomeEvent"/>
+        </Transition>
+
+        <!-- Drag -->
+
+        <Transition toVariant="@id/drag">
+            <Event id="_Drag_PanelDragEvent" panelId="grip_bar" />
+        </Transition>
+        <Transition toVariant="@id/opened">
+            <Event id="_Drag_PanelOpenEvent" panelId="grip_bar" />
+        </Transition>
+        <Transition toVariant="@id/closed">
+            <Event id="_Drag_PanelCloseEvent" panelId="grip_bar" />
+        </Transition>
+
+        <!-- Immersive -->
+
+        <Transition toVariant="@id/opened">
+            <Event id="_System_ExitImmersiveMode" panel="app_panel"/>
+        </Transition>
+
+        <Transition toVariant="@id/immersive">
+            <Event id="_System_EnterImmersiveMode" panel="app_panel"/>
+        </Transition>
+    </Transitions>
+</TaskPanel>

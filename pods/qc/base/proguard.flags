@@ -1,0 +1,2 @@
+# Keep SystemUIQCView from being stripped by ProGuard
+-keep class com.android.systemui.car.qc.base.SystemUIQCView { *; }

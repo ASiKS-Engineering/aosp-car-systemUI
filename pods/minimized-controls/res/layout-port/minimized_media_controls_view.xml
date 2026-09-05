@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2026 The Android Open Source Project
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    you may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:paddingHorizontal="@dimen/minimized_controls_button_padding"
+    android:paddingTop="@dimen/minimized_controls_button_padding">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/card_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingHorizontal="@dimen/minimized_controls_button_padding"
+        android:background="@drawable/minimized_controls_background">
+
+        <!-- Section 1: Album Art and App Icon -->
+        <FrameLayout
+            android:id="@+id/minimized_control_album_art_container"
+            android:layout_width="@dimen/minimized_controls_album_art_size"
+            android:layout_height="@dimen/minimized_controls_album_art_size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+            <!-- Wrapper to keep icon relative to album art -->
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <ImageView
+                    android:id="@+id/album_art"
+                    android:layout_width="@dimen/minimized_controls_button_size"
+                    android:layout_height="@dimen/minimized_controls_button_size"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_placeholder" />
+
+                <FrameLayout
+                    android:layout_width="@dimen/minimized_controls_app_icon_size"
+                    android:layout_height="@dimen/minimized_controls_app_icon_size"
+                    android:layout_gravity="bottom|end"
+                    android:translationX="@dimen/minimized_controls_app_icon_offset"
+                    android:translationY="@dimen/minimized_controls_app_icon_offset"
+                    android:background="@drawable/minimized_media_controls_app_icon_background">
+                    <ImageView
+                        android:id="@+id/media_widget_app_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/minimized_controls_app_icon_outline_thickness"
+                        android:scaleType="fitCenter"
+                        android:src="@android:drawable/sym_def_app_icon" />
+                </FrameLayout>
+            </FrameLayout>
+        </FrameLayout>
+
+        <!-- Title and Subtitle -->
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/minimized_controls_button_padding"
+            android:layout_marginEnd="@dimen/minimized_controls_button_padding"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textAppearance="?oemTextAppearanceTitleLarge"
+            app:layout_constraintStart_toEndOf="@id/minimized_control_album_art_container"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/playback_action_id1_container"
+            app:layout_constraintBottom_toTopOf="@id/subtitle"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintHorizontal_bias="0.0"/>
+
+        <TextView
+            android:id="@+id/subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/minimized_controls_button_padding"
+            android:layout_marginEnd="@dimen/minimized_controls_button_padding"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textAppearance="?oemTextAppearanceTitleMedium"
+            app:layout_constraintStart_toEndOf="@id/minimized_control_album_art_container"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/playback_action_id1_container"
+            app:layout_constraintHorizontal_bias="0.0"/>
+
+        <!-- Section 4: Next Button (Rightmost) -->
+        <FrameLayout
+            android:id="@+id/playback_action_id2_container"
+            android:layout_width="@dimen/minimized_controls_button_size"
+            android:layout_height="@dimen/minimized_controls_button_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <ImageButton
+                android:id="@+id/playback_action_id2"
+                android:layout_width="@dimen/minimized_controls_button_size"
+                android:layout_height="@dimen/minimized_controls_button_size"
+                android:scaleType="fitCenter"
+                android:padding="@dimen/minimized_controls_icon_padding"
+                android:tint="?oemColorOnSurfaceVariant"
+                android:contentDescription="@string/minimized_controls_next_description"/>
+        </FrameLayout>
+
+        <!-- Section 3: Play/Pause Button -->
+        <FrameLayout
+            android:id="@+id/play_pause_button_container"
+            android:layout_width="@dimen/minimized_controls_button_size"
+            android:layout_height="@dimen/minimized_controls_button_size"
+            android:layout_marginEnd="@dimen/minimized_controls_button_padding"
+            app:layout_constraintEnd_toStartOf="@id/playback_action_id2_container"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <ImageButton
+                android:id="@+id/play_pause_button"
+                android:layout_width="@dimen/minimized_controls_button_size"
+                android:layout_height="@dimen/minimized_controls_button_size"
+                android:background="@drawable/minimized_media_controls_play_pause_background"
+                android:src="@drawable/minimized_media_controls_play_pause_button"
+                android:scaleType="fitCenter"
+                android:padding="@dimen/minimized_controls_icon_padding"
+                android:tint="?oemColorSurfaceContainerHigh"
+                android:contentDescription="@string/minimized_controls_play_description"/>
+        </FrameLayout>
+
+        <!-- Section 2: Prev Button -->
+        <FrameLayout
+            android:id="@+id/playback_action_id1_container"
+            android:layout_width="@dimen/minimized_controls_button_size"
+            android:layout_height="@dimen/minimized_controls_button_size"
+            android:layout_marginEnd="@dimen/minimized_controls_button_padding"
+            app:layout_constraintEnd_toStartOf="@id/play_pause_button_container"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <ImageButton
+                android:id="@+id/playback_action_id1"
+                android:layout_width="@dimen/minimized_controls_button_size"
+                android:layout_height="@dimen/minimized_controls_button_size"
+                android:scaleType="fitCenter"
+                android:padding="@dimen/minimized_controls_icon_padding"
+                android:tint="?oemColorOnSurfaceVariant"
+                android:contentDescription="@string/minimized_controls_prev_description"/>
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

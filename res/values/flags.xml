@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2025 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License
+  -->
+<resources>
+    <!-- Enable the scalableUI feature. -->
+    <bool name="scalable_ui">true</bool>
+    <!-- Controls dispatching events when panel animation ends. -->
+    <bool name="enable_animation_end_event">true</bool>
+    <!-- Enables the Design Compose-based design for the Scalable UI. -->
+    <bool name="scalable_ui_design_compose">true</bool>
+    <!-- Controls enabling optional decor on the task panel. -->
+    <bool name="enable_decor">true</bool>
+    <!-- Ensures that automatically added decorations for compatibility mode respect the panel's safe region. -->
+    <bool name="display_compatibility_auto_decor_safe_region">true</bool>
+    <!-- Enables actions within the Scalable UI. -->
+    <bool name="scalable_ui_actions">true</bool>
+    <!-- Controls registering to PanelUpdates Consumer. -->
+    <bool name="enable_ext_panel_updates">true</bool>
+    <!-- Controls enabling configuration change handling for ScalableUI. -->
+    <bool name="scalable_ui_handle_configuration_change">true</bool>
+    <!-- Controls enabling display compatibility V2. -->
+    <bool name="display_compatibility_v2">true</bool>
+    <!-- Controls enabling display compatibility V2. -->
+    <bool name="display_compat_v2">true</bool>
+    <!-- Controls enabling Media Projection indicator. -->
+    <bool name="show_media_projection_indicator">true</bool>
+    <!-- Controls removing SUW as the home activity and launching through alternative means. -->
+    <bool name="scalable_ui_no_suw_home">false</bool>
+    <!-- Controls enabling Minimized Controls. -->
+    <bool name="scalable_ui_minimized_controls">true</bool>
+    <!-- Controls enabling special handling of promoted notifications. -->
+    <bool name="promoted_notifications">true</bool>
+</resources>

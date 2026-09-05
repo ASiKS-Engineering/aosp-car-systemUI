@@ -1,0 +1,114 @@
+package: "com.android.systemui.car"
+container: "system_ext"
+
+flag {
+    name: "config_app_blocking_activities"
+    namespace: "car_sys_exp"
+    description: "Flag controlling the launch of app specific driving optimized blocking activities"
+    bug: "329532895"
+}
+
+flag {
+    name: "user_switch_keyguard_shown_timeout"
+    namespace: "car_sys_exp"
+    description: "Flag that sets a keyguard showing timeout to ensure keyguard is shown on user switch"
+    bug: "335455314"
+}
+
+flag {
+    name: "move_task_to_distant_display"
+    namespace: "car_sys_exp"
+    description: "Flag that enables task to move between distant display experience"
+    bug: "341963483"
+}
+
+flag {
+    name: "show_qc_sound_panel"
+    namespace: "car_sys_exp"
+    description: "Flag that shows the quick controls panel for sound."
+    bug: "344677470"
+}
+
+flag {
+    name: "display_compatibility_v2"
+    namespace: "car_sys_exp"
+    description: "This flag controls v2 development to enable display compatibility feature."
+    bug: "364382110"
+}
+
+flag {
+    name: "display_compat_v2"
+    namespace: "car_sys_exp"
+    description: "This flag controls v2 development to enable display compatibility feature."
+    bug: "364382110"
+}
+
+flag {
+    name: "display_compatibility_caption_bar"
+    namespace: "car_sys_exp"
+    description: "This flag controls enabling the back button for display compatibility using caption bar."
+    bug: "370104463"
+}
+
+flag {
+    name: "scalable_ui"
+    namespace: "car_sys_exp"
+    description: "This flag controls the development to enable scalable UI feature."
+    bug: "382109339"
+}
+
+flag {
+    name: "package_level_system_bar_visibility"
+    namespace: "car_sys_exp"
+    description: "Allow per-package persistent system bar visibility control."
+    bug: "328511033"
+}
+
+flag {
+    name: "display_compatibility_auto_decor_safe_region"
+    namespace: "car_sys_exp"
+    description: "This flag controls enabling the back button (using AutoDecor) and safe region for display compatibility."
+    bug: "370104463"
+}
+
+flag {
+    name: "scalable_ui_design_compose"
+    namespace: "car_sys_exp"
+    description: "This flag controls enabling loading the system ui using the DesignCompose dcf file instead of xml."
+    bug: "414813386"
+}
+
+flag {
+    name: "scalable_ui_actions"
+    namespace: "car_sys_exp"
+    description: "This flag controls enabling scalable ui actions."
+    bug: "423995605"
+}
+
+flag {
+    name: "show_media_projection_indicator"
+    namespace: "car_sys_exp"
+    description: "This flag controls enabling an indicator for Media Projection API"
+    bug: "435279151"
+}
+
+flag {
+    name: "scalable_ui_no_suw_home"
+    namespace: "car_sys_exp"
+    description: "This flag controls removing SUW as the home activity and launching through alternative means."
+    bug: "435347522"
+}
+
+flag {
+    name: "scalable_ui_minimized_controls"
+    namespace: "car_sys_exp"
+    description: "This flag controls enabling minimized controls"
+    bug: "465164732"
+}
+
+flag {
+    name: "promoted_notifications"
+    namespace: "car_sys_exp"
+    description: "This flag controls enabling special handling of promoted notifications"
+    bug: "478878478"
+}

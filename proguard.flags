@@ -1,0 +1,24 @@
+-include ../../../../frameworks/base/packages/SystemUI/proguard_common.flags
+
+-keep class com.android.systemui.CarSystemUIInitializer
+-keep class com.android.systemui.car.biometrics.PinPadView { *; }
+-keep class com.android.car.notification.headsup.animationhelper.**
+
+-keep class com.android.systemui.DaggerCarGlobalRootComponent { *; }
+-keep class com.android.systemui.DaggerCarGlobalRootComponent$CarSysUIComponentImpl { *; }
+
+-keep class com.android.systemui.statusbar.policy.DateView { *; }
+
+-keep class com.android.systemui.car.wm.scalableui.panel.controller.BaseTaskPanelController { *; }
+-keep class com.android.systemui.car.wm.scalableui.panel.controller.AppStyledViewController { *; }
+-keep class com.android.systemui.car.wm.scalableui.panel.controller.MapsPanelController { *; }
+-keep class com.android.systemui.car.wm.scalableui.view.GripBarViewController { *; }
+-keep class com.android.systemui.car.wm.scalableui.view.PanelOverlayController { *; }
+-keep class com.android.systemui.car.wm.scalableui.view.ViewProvider { *; }
+-keep class com.android.systemui.car.wm.scalableui.view.GripBar { *; }
+-keep class com.android.systemui.car.wm.scalableui.view.PanelOverlay { *; }
+-keep class com.android.systemui.car.wm.scalableui.panel.controller.CompatibilityToolbarController { *; }
+-keep class com.android.systemui.car.wm.scalableui.view.AppStyledViewScrim { *; }
+
+-keep class com.android.systemui.car.Flags { *; }
+-keep class com.android.car.scalableui.Flags { *; }

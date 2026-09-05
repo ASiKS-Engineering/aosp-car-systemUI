@@ -1,0 +1,55 @@
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<TaskPanel id="widget_panel" defaultVariant="@id/opened" controller="@xml/widget_panel_controller" displayId="0">
+    <Restart policy="DEFAULT" maxRetry="3"/>
+    <TaskBehavior taskProperties="UNTRIMMABLE"/>
+    <Variant id="@+id/base">
+        <Layer layer="@integer/widget_panel_layer"/>
+        <Focus onTransition="false" />
+    </Variant>
+    <Variant id="@+id/opened" parent="@id/base">
+        <Bounds left="@dimen/contextual_bar_gap"
+            bottom="100%"
+            right="100%"
+            height="@dimen/contextual_bar_height"
+            bottomOffset="@dimen/navigation_bar_height_plus_contextual_bar_gap"
+            rightOffset="@dimen/contextual_bar_gap"/>
+    </Variant>
+    <Variant id="@+id/closed" parent="@id/base">
+        <Visibility isVisible="false"/>
+        <Bounds left="@dimen/contextual_bar_gap"
+            top="100%"
+            right="100%"
+            height="@dimen/contextual_bar_height"
+            rightOffset="@dimen/contextual_bar_gap" />
+    </Variant>
+    <Variant id="@+id/userswitch" parent="@id/closed" />
+    <Variant id="@+id/keyguard_opened" parent="@id/closed" />
+    <Variant id="@+id/suw" parent="@id/closed" />
+
+    <Transitions>
+        <Transition onEvent="_System_EnterSuwEvent" toVariant="@id/suw"/>
+        <Transition onEvent="_System_ExitSuwEvent" toVariant="@id/opened"/>
+        <Transition onEvent="_System_OnHomeEvent" toVariant="@id/opened"/>
+        <Transition onEvent="_System_BeforeUserSwitch" toVariant="@id/userswitch"/>
+        <Transition onEvent="_System_UserSwitchComplete" fromVariant="@id/userswitch" toVariant="@id/opened"/>
+        <Transition onEvent="_System_EnterImmersiveMode" toVariant="@id/closed"/>
+        <Transition onEvent="_System_ExitImmersiveMode" toVariant="@id/opened"/>
+        <!-- Keyguard -->
+        <Transition onEvent="_System_KeyguardShown" toVariant="@id/keyguard_opened"/>
+        <Transition onEvent="_System_KeyguardHidden" fromVariant="@id/keyguard_opened" toVariant="@id/opened"/>
+    </Transitions>
+</TaskPanel>

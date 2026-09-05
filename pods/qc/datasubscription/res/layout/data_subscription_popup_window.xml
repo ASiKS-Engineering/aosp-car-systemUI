@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2024 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<com.android.car.ui.shortcutspopup.CarUiArrowContainerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/textViewContainer"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    app:carUiArrowHeight="@dimen/data_subscription_pop_up_arrow_height"
+    app:carUiArrowRadius="?dataSubscriptionPopUpArrowRadius"
+    app:carUiArrowWidth="@dimen/data_subscription_pop_up_arrow_width"
+    app:carUiContentView="@id/pop_up_view"
+    app:carUiContentViewDrawable="@drawable/bg_arrow_container_default"
+    app:carUiHasArrow="true"
+    app:carUiOffsetX="@dimen/data_subscription_pop_up_arrow_offset"
+    app:carUiArrowColor="@color/qc_pop_up_color"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <LinearLayout
+        android:id="@+id/pop_up_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/popup_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="@dimen/data_subscription_pop_up_vertical_padding"
+            android:paddingStart="@dimen/data_subscription_pop_up_horizontal_padding"
+            android:paddingEnd="@dimen/data_subscription_pop_up_text_padding"
+            android:paddingTop="@dimen/data_subscription_pop_up_vertical_padding"
+            android:textColor="@color/qc_pop_up_text_color"
+            android:layout_marginStart="@dimen/data_subscription_pop_up_horizontal_margin"/>
+        <TextView
+            android:id="@+id/popup_uxr_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:paddingBottom="@dimen/data_subscription_pop_up_vertical_padding"
+            android:paddingStart="@dimen/data_subscription_pop_up_text_padding"
+            android:paddingEnd="@dimen/data_subscription_pop_up_horizontal_padding"
+            android:paddingTop="@dimen/data_subscription_pop_up_vertical_padding"
+            android:textColor="@color/qc_pop_up_text_color"
+            android:layout_marginEnd="@dimen/data_subscription_pop_up_horizontal_margin"/>
+
+        <Button
+            android:id="@+id/data_subscription_explore_options_button"
+            android:layout_width="@dimen/data_subscription_pop_up_button_width"
+            android:layout_height="@dimen/data_subscription_pop_up_button_height"
+            android:layout_marginRight="@dimen/data_subscription_pop_up_horizontal_padding"
+            android:text="@string/data_subscription_button_text"
+            style="@android:style/Widget.DeviceDefault.Button.Colored"/>
+    </LinearLayout>
+
+</com.android.car.ui.shortcutspopup.CarUiArrowContainerView>

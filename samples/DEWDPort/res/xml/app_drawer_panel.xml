@@ -1,0 +1,123 @@
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<TaskPanel id="app_panel" defaultVariant="@id/closed" role="@string/default_config" displayId="0">
+    <Variant id="@+id/base">
+        <Layer layer="@integer/app_panel_layer"/>
+    </Variant>
+
+    <Variant id="@+id/opened" parent="@id/base">
+        <Bounds left="0" bottom="100%" width="100%" height="@dimen/app_height" bottomOffset="@dimen/app_bottom_offset"/>
+        <SafeBounds left="0" bottom="100%" width="100%" height="@dimen/app_height_safe" bottomOffset="@dimen/app_bottom_offset"/>
+        <TaskToolbarBounds left="0" bottom="100%" width="100%" height="@dimen/app_safe_top_offset" bottomOffset="@dimen/app_safe_bottom_offset"/>
+        <Background color="@color/app_panel_background_color" />
+    </Variant>
+
+    <Variant id="@+id/closed" parent="@id/base">
+        <Visibility isVisible="false"/>
+        <Bounds left="0" top="100%" width="100%" height="@dimen/app_height"/>
+        <SafeBounds left="0" top="100%" width="100%" height="@dimen/app_height_safe" topOffset="@dimen/app_safe_top_offset"/>
+        <TaskToolbarBounds left="0" top="100%" width="100%" height="@dimen/app_safe_top_offset"/>
+    </Variant>
+
+    <Variant id="@+id/suw_open" parent="@id/opened">
+        <Background color="@color/car_panel_background_suw" />
+        <Bounds left="0" bottom="100%" width="100%" height="100%"/>
+        <Layer layer="@integer/app_panel_suw_layer"/>
+    </Variant>
+    <Variant id="@+id/suw_close" parent="@id/suw_open">
+        <Visibility isVisible="false"/>
+    </Variant>
+
+    <Variant id="@+id/immersive" parent="@id/base">
+        <Visibility isVisible="true"/>
+        <Bounds left="0" top="0" bottom="100%" width="100%"  bottomOffset="@dimen/navigation_bar_height" topOffset="@dimen/status_bar_height"/>
+        <SafeBounds left="0" top="0" bottom="100%" width="100%" bottomOffset="@dimen/navigation_bar_height" topOffset="@dimen/app_safe_fullscreen_top_offset"/>
+        <TaskToolbarBounds left="0" top="0" width="100%" height="@dimen/app_toolbar_height" topOffset="@dimen/status_bar_height"/>
+    </Variant>
+
+    <KeyFrameVariant id="@+id/drag" parent="@id/base">
+        <KeyFrame frame="0" variant="@id/opened" />
+        <KeyFrame frame="100" variant="@id/closed" />
+    </KeyFrameVariant>
+
+    <Transitions>
+        <Transition fromVariant="@id/opened" toVariant="@id/closed">
+            <Event id="_System_TaskOpenEvent" panel="panel_app_grid"/>
+            <Event id="_System_TaskOpenEvent" panel="panel_calm_mode"/>
+            <Event id="_System_TaskPanelEmptyEvent" panel="app_panel"/>
+            <Event id="_System_BeforeUserSwitch"/>
+            <Event id="_System_OnHomeEvent"/>
+        </Transition>
+
+        <Transition toVariant="@id/closed">
+            <Event id="_System_TaskOpenEvent" panel="suw_panel"/>
+        </Transition>
+
+        <Transition fromVariant="@id/closed" toVariant="@id/opened">
+            <Event id="_System_TaskOpenEvent" panel="app_panel"/>
+        </Transition>
+
+        <!-- Setup Wizard -->
+
+        <Transition fromVariant="@id/suw_close" toVariant="@id/suw_open">
+            <Event id="_System_TaskOpenEvent" panel="app_panel"/>
+        </Transition>
+
+        <Transition fromVariant="@id/suw_open" toVariant="@id/suw_close">
+            <Event id="_System_TaskCloseEvent" panel="app_panel"/>
+            <Event id="_System_TaskPanelEmptyEvent" panel="app_panel"/>
+        </Transition>
+
+        <Transition onEvent="_System_EnterSuwEvent" toVariant="@id/suw_close" />
+        <Transition onEvent="_System_ExitSuwEvent" fromVariant="@id/suw_open" toVariant="@id/closed" />
+        <Transition onEvent="_System_ExitSuwEvent" fromVariant="@id/suw_close" toVariant="@id/closed" />
+
+        <!-- Drag -->
+
+        <Transition toVariant="@id/drag">
+            <Event id="_Drag_PanelDragEvent" panelId="decor_grip" />
+        </Transition>
+        <Transition toVariant="@id/closed">
+            <Event id="_Drag_PanelCloseEvent" panelId="decor_grip" />
+        </Transition>
+        <Transition toVariant="@id/opened">
+            <Event id="_Drag_PanelOpenEvent" panelId="decor_grip" />
+        </Transition>
+
+        <!-- Immersive -->
+
+        <Transition toVariant="@id/opened">
+            <Event id="_System_ExitImmersiveMode" panel="app_panel"/>
+        </Transition>
+
+        <Transition toVariant="@id/immersive">
+            <Event id="_System_EnterImmersiveMode" panel="app_panel"/>
+        </Transition>
+
+        <Transition fromVariant="@id/immersive" toVariant="@id/closed">
+            <Event id="_System_TaskOpenEvent" panel="panel_app_grid"/>
+            <Event id="_System_TaskOpenEvent" panel="panel_calm_mode"/>
+            <Event id="_System_TaskPanelEmptyEvent" panel="app_panel"/>
+            <Event id="_System_BeforeUserSwitch"/>
+            <Event id="_System_OnHomeEvent"/>
+        </Transition>
+
+        <Transition fromVariant="@id/immersive" toVariant="@id/opened">
+            <Event id="_System_TaskOpenEvent" panel="app_panel"/>
+        </Transition>
+
+    </Transitions>
+</TaskPanel>

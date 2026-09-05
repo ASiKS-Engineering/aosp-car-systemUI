@@ -1,0 +1,65 @@
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<DecorPanel id="decor_grip_app" defaultVariant="@id/closed" controller="@xml/app_grid_grip_bar_controller">
+    <Variant id="@+id/base">
+        <Layer layer="@integer/app_grid_grip_bar_panel_layer"/>
+    </Variant>
+
+    <Variant id="@+id/opened" parent="@id/base">
+        <Bounds left="0" bottom="100%" width="100%" height="@dimen/grip_bar_height" topOffset="@dimen/grip_bar_top_offset" bottomOffset="@dimen/app_bottom_offset"/>
+    </Variant>
+
+    <Variant id="@+id/closed" parent="@id/base">
+        <Visibility isVisible="false"/>
+        <Bounds left="0" top="100%" width="100%" height="@dimen/grip_bar_height" topOffset="@dimen/grip_bar_top_offset"/>
+    </Variant>
+
+    <Variant id="@+id/suw" parent="@id/closed" />
+
+    <KeyFrameVariant id="@+id/drag" parent="@id/base">
+        <KeyFrame frame="0" variant="@id/opened" />
+        <KeyFrame frame="100" variant="@id/closed" />
+    </KeyFrameVariant>
+
+    <Transitions>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=app_panel" fromVariant="@id/opened" toVariant="@id/closed"/>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=panel_app_grid" fromVariant="@id/closed" toVariant="@id/opened"/>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=panel_calm_mode" fromVariant="@id/opened" toVariant="@id/closed"/>
+        <Transition onEvent="_System_TaskOpenEvent" onEventTokens="panelId=suw_panel" fromVariant="@id/opened" toVariant="@id/closed"/>
+
+        <Transition onEvent="_System_BeforeUserSwitch" fromVariant="@id/opened" toVariant="@id/closed"/>
+
+        <Transition onEvent="_System_OnHomeEvent" fromVariant="@id/opened" toVariant="@id/closed"/>
+
+        <Transition onEvent="_System_EnterSuwEvent" toVariant="@id/suw"/>
+        <Transition onEvent="_System_ExitSuwEvent" fromVariant="@id/suw" toVariant="@id/closed"/>
+
+        <Transition onEvent="close_app_grid" toVariant="@id/closed"/>
+
+        <!-- Drag -->
+
+        <Transition toVariant="@id/drag">
+            <Event id="_Drag_PanelDragEvent" panelId="decor_grip_app" />
+        </Transition>
+        <Transition toVariant="@id/closed">
+            <Event id="_Drag_PanelCloseEvent" panelId="decor_grip_app" />
+        </Transition>
+        <Transition toVariant="@id/opened">
+            <Event id="_Drag_PanelOpenEvent" panelId="decor_grip_app" />
+        </Transition>
+    </Transitions>
+</DecorPanel>

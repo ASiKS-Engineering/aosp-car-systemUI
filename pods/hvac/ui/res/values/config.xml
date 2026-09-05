@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2025 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License
+  -->
+<resources>
+    <!-- Amount of time (in ms) to wait before auto closing the HVAC panel.
+         Set to 0 to disable auto close. -->
+    <integer name="config_hvacAutoDismissDurationMs">0</integer>
+
+    <!--Percentage of the screen height, from the top, where the border between HVAC panel closing
+        or opening, depending on where its handle bar is released after being dragged, would be
+        drawn.
+
+        The idea is that if the HVAC panel handle bar is dragged and then released too close to the
+        panel's origin, then the intent to close the panel is seen to have been canceled, and the
+        panel is expanded back to its original height. On the other hand, if the handle bar is
+        released far enough from the panel's origin, then the panel is collapsed and dismissed.
+
+        If the HVAC panel expands from below, then the HVAC panel handle bar being released below
+        this border would result in the panel being dismissed and collapsed, while it being released
+        above the border results in the panel being expanded back to the original height.
+
+        If the HVAC panel expands from the top, then the HVAC panel handle bar being released above
+        this border would result in the panel being dismissed and collapsed, while it being released
+        below the border results in the panel being expanded back to the original height.
+    -->
+    <integer name="hvac_panel_settle_close_percentage">50</integer>
+</resources>

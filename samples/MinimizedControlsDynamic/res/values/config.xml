@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <array name="window_states" android:featureFlag="com.android.car.scalableui.enable_ext_panel_updates">
+        <item>@xml/floating_app_panel</item>
+        <item>@xml/background_map_panel</item>
+        <item>@xml/widget_panel</item>
+        <item>@xml/assistant_panel</item>
+        <item>@xml/suw_panel</item>
+        <item>@xml/unreactive_panel</item>
+        <item>@xml/top_bar_left_panel</item>
+        <item>@xml/top_bar_right_panel</item>
+        <item>@xml/bottom_bar_left_panel</item>
+        <item>@xml/bottom_bar_center_panel</item>
+        <item>@xml/bottom_bar_right_panel</item>
+        <item>@xml/minimized_media_controls_panel</item>
+        <item>@xml/minimized_dialer_controls_panel</item>
+        <item>@xml/hun_panel</item>
+    </array>
+
+    <bool name="config_enableTopSystemBar" android:featureFlag="com.android.car.scalableui.enable_ext_panel_updates">false</bool>
+    <bool name="config_enableBottomSystemBar" android:featureFlag="com.android.car.scalableui.enable_ext_panel_updates">false</bool>
+    <bool name="config_enableLeftSystemBar" android:featureFlag="com.android.car.scalableui.enable_ext_panel_updates">false</bool>
+    <bool name="config_enableRightSystemBar" android:featureFlag="com.android.car.scalableui.enable_ext_panel_updates">false</bool>
+
+</resources>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+
+  <!-- Left Panels -->
+  <dimen name="car_bottom_left_system_bar_width">250px</dimen>
+  <dimen name="car_top_left_system_bar_width">500px</dimen>
+
+  <!-- Center Panel -->
+  <dimen name="car_bottom_center_system_bar_left">660px</dimen>
+  <dimen name="car_bottom_center_system_bar_width">600px</dimen>
+
+  <!-- Right Panels -->
+  <dimen name="car_bottom_right_system_bar_width">250px</dimen>
+  <dimen name="car_top_right_system_bar_width">350px</dimen>
+
+  <dimen name="status_bar_height">104px</dimen>
+  <dimen name="navigation_bar_height">144px</dimen>
+
+  <!-- Minimized Controls Decor Panel (in between left and center) -->
+  <dimen name="minimized_controls_left">280px</dimen>
+  <dimen name="minimized_controls_width">350px</dimen>
+
+
+
+  <dimen name="floating_app_panel_top_offset">@dimen/status_bar_height</dimen>
+  <dimen name="floating_app_panel_bottom_offset">@dimen/navigation_bar_height</dimen>
+
+  <dimen name="background_map_panel_left_bound">0dp</dimen>
+
+</resources>

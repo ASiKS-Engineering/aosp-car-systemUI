@@ -1,0 +1,3 @@
+# Keep QCFooterView from being stripped by ProGuard
+-keep class com.android.systemui.car.qc.footer.base.QCFooterView { *; }
+-keep class com.android.systemui.car.qc.footer.base.QCFooterButton { *; }

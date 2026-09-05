@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2025 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License
+  -->
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="HvacButton">
+        <item name="android:layout_width">@dimen/hvac_panel_button_dimen</item>
+        <item name="android:layout_height">@dimen/hvac_panel_button_dimen</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:layout_marginTop">@dimen/hvac_button_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/hvac_button_margin_bottom</item>
+        <item name="android:layout_marginStart">@dimen/hvac_button_margin_start</item>
+        <item name="android:layout_marginEnd">@dimen/hvac_button_margin_end</item>
+    </style>
+
+    <style name="HvacTemperatureFont">
+        <item name="android:textSize">@dimen/temperature_bar_text_size</item>
+        <item name="android:textColor">?oemColorOnPrimary</item>
+    </style>
+
+    <style name="HvacTemperature" parent="HvacTemperatureFont">
+        <item name="android:layout_marginLeft">@dimen/hvac_text_left_margin</item>
+    </style>
+
+    <style name="HvacTemperatureControlIcon">
+        <item name="android:scaleType">center</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <style name="HvacFanSpeedBar">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginTop">@dimen/hvac_fan_speed_bar_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/hvac_fan_speed_bar_margin_bottom</item>
+        <item name="android:layout_marginEnd">@dimen/hvac_fan_speed_bar_segment_margin</item>
+        <item name="android:layout_marginStart">@dimen/hvac_fan_speed_bar_segment_margin</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="HvacFanSpeedText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginTop">@dimen/hvac_fan_speed_text_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/hvac_fan_speed_text_margin_bottom</item>
+        <item name="android:textSize">@dimen/hvac_fan_speed_bar_text_size</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/hvac_icon_color</item>
+    </style>
+
+    <!-- Note that this style works only in a horizontal linear layout. -->
+    <style name="HvacSpacerView" >
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="HvacButton.FanDirection" parent="HvacButton">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+</resources>

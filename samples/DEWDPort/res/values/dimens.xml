@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="PxUsage">
+    <dimen name="screen_height">1920px</dimen>
+    <dimen name="status_bar_height">80px</dimen>
+    <dimen name="navigation_bar_height">140px</dimen>
+    <dimen name="panel_rounded_corner">42px</dimen>
+    <dimen name="contextual_bar_gap">20px</dimen>
+    <dimen name="contextual_bar_height">360px</dimen>
+    <dimen name="contextual_bar_height_plus_gaps">400px</dimen>
+    <dimen name="navigation_bar_height_plus_contextual_bar_gap">160px</dimen>
+
+    <dimen name="app_plus_grip_height">891px</dimen>
+
+    <!-- TODO(418260617) remove. Currently needed because of grip bar controller -->
+    <dimen name="app_top">931px</dimen>
+    <dimen name="app_height">849px</dimen>
+    <dimen name="app_bottom_offset">@dimen/navigation_bar_height</dimen>
+
+    <dimen name="app_height_safe">773px</dimen>
+    <dimen name="app_safe_top_offset">76px</dimen>
+    <dimen name="app_toolbar_height">76px</dimen>
+    <dimen name="app_safe_bottom_offset">923px</dimen>
+    <dimen name="app_safe_fullscreen_top_offset">156px</dimen>
+
+    <dimen name="map_top_inset">@dimen/status_bar_height</dimen>
+    <dimen name="map_bottom_inset">@dimen/contextual_bar_height_plus_gaps</dimen>
+    <dimen name="map_bottom_inset_large">@dimen/app_plus_grip_height</dimen>
+    <dimen name="map_bottom_offset">@dimen/navigation_bar_height</dimen>
+
+    <!-- Extending grip bar to go all the way behind the app panel to cover the missing corners at the bottom -->
+    <dimen name="grip_bar_height">@dimen/app_plus_grip_height</dimen>
+    <dimen name="grip_bar_top_offset">-35px</dimen>
+</resources>
