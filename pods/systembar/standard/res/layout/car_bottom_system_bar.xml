@@ -22,9 +22,12 @@
     android:layout_height="match_parent"
     android:background="@drawable/bmw_style_nav_bar_background">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/nav_buttons"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center">
 
         <!-- HVAC LEFT -->
         <com.android.systemui.car.hvac.TemperatureControlView
@@ -32,76 +35,68 @@
             style="@style/TemperatureControlView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:paddingStart="24dp"
             systemui:hvacAreaId="49"
             systemui:controller="com.android.systemui.car.hvac.TemperatureControlViewController">
             <include layout="@layout/adjustable_temperature_view"/>
         </com.android.systemui.car.hvac.TemperatureControlView>
 
-        <!-- CENTER HOME BUTTON -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <!-- Media -->
+        <com.android.systemui.car.systembar.base.CarSystemBarButton
+            android:id="@+id/btn_media"
+            style="@style/SystemBarButton"
+            systemui:icon="@drawable/car_ic_music"
+            systemui:intent="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_MUSIC;launchFlags=0x14000000;end"/>
+
+        <!-- Navi -->
+        <com.android.systemui.car.systembar.base.CarSystemBarButton
+            android:id="@+id/navigation_button"
+            style="@style/SystemBarButton"
+            systemui:icon="@drawable/car_ic_navigation"
+            systemui:intent="intent:#Intent;action=android.intent.action.MAIN;component=com.example.campernavigator/.MainActivity;launchFlags=0x14800000;B.SHOW_MENU=true;end"
+            systemui:highlightWhenSelected="true"/>
+
+        <!-- Fan -->
+        <com.android.systemui.car.systembar.base.CarSystemBarButton
+            android:id="@+id/btn_fan"
+            style="@style/SystemBarButton"
+            systemui:icon="@drawable/car_ic_hvac"
+            systemui:intent="intent:#Intent;action=android.car.intent.action.CONTROL_HVAC;launchFlags=0x14000000;end"/>
+
+        <!-- CENTER HOME -->
         <com.android.systemui.car.systembar.base.CarSystemBarButton
             android:id="@+id/home"
             style="@style/SystemBarButton"
             android:layout_width="90dp"
             android:layout_height="90dp"
-            android:layout_centerInParent="true"
             systemui:icon="@drawable/car_ic_home"
             systemui:intent="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.HOME;launchFlags=0x14000000;end"
             systemui:controller="com.android.systemui.car.systembar.home.HomeButtonController"
             systemui:highlightWhenSelected="true"/>
 
-        <!-- LEFT ICONS GROUP -->
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <!-- Apps -->
+        <com.android.systemui.car.systembar.appgrid.AppGridButton
+            android:id="@+id/grid_nav"
+            style="@style/SystemBarButton"
+            systemui:icon="@drawable/car_ic_apps"
+            systemui:unselectedIntent="@string/system_bar_app_drawer_intent"
+            systemui:highlightWhenSelected="true"/>
+
+        <!-- Phone -->
+        <com.android.systemui.car.systembar.base.CarSystemBarButton
+            android:id="@+id/btn_phone"
+            style="@style/SystemBarButton"
+            systemui:icon="@drawable/car_ic_phone"
+            systemui:intent="intent:#Intent;action=android.intent.action.DIAL;launchFlags=0x14000000;end"/>
+
+        <View
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_toEndOf="@id/driver_hvac"
-            android:layout_toStartOf="@id/home">
-
-            <com.android.systemui.car.systembar.base.CarSystemBarButton
-                android:id="@+id/btn_media"
-                style="@style/SystemBarButton"
-                systemui:icon="@drawable/car_ic_music"
-                systemui:intent="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_MUSIC;launchFlags=0x14000000;end"/>
-
-            <com.android.systemui.car.systembar.base.CarSystemBarButton
-                android:id="@+id/navigation_button"
-                style="@style/SystemBarButton"
-                systemui:icon="@drawable/car_ic_navigation"
-                systemui:intent="intent:#Intent;action=android.intent.action.MAIN;component=com.example.campernavigator/.MainActivity;launchFlags=0x14800000;B.SHOW_MENU=true;end"
-                systemui:highlightWhenSelected="true"/>
-
-            <com.android.systemui.car.systembar.base.CarSystemBarButton
-                android:id="@+id/btn_fan"
-                style="@style/SystemBarButton"
-                systemui:icon="@drawable/car_ic_hvac"
-                systemui:intent="intent:#Intent;action=android.car.intent.action.CONTROL_HVAC;launchFlags=0x14000000;end"/>
-        </LinearLayout>
-
-        <!-- RIGHT ICONS GROUP -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_toEndOf="@id/home"
-            android:layout_toStartOf="@id/passenger_hvac">
-
-            <com.android.systemui.car.systembar.appgrid.AppGridButton
-                android:id="@+id/grid_nav"
-                style="@style/SystemBarButton"
-                systemui:icon="@drawable/car_ic_apps"
-                systemui:unselectedIntent="@string/system_bar_app_drawer_intent"
-                systemui:highlightWhenSelected="true"/>
-
-            <com.android.systemui.car.systembar.base.CarSystemBarButton
-                android:id="@+id/btn_phone"
-                style="@style/SystemBarButton"
-                systemui:icon="@drawable/car_ic_phone"
-                systemui:intent="intent:#Intent;action=android.intent.action.DIAL;launchFlags=0x14000000;end"/>
-        </LinearLayout>
+            android:layout_weight="1"/>
 
         <!-- HVAC RIGHT -->
         <com.android.systemui.car.hvac.TemperatureControlView
@@ -109,12 +104,20 @@
             style="@style/TemperatureControlView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:paddingEnd="24dp"
             systemui:hvacAreaId="68"
             systemui:controller="com.android.systemui.car.hvac.TemperatureControlViewController">
             <include layout="@layout/adjustable_temperature_view"/>
         </com.android.systemui.car.hvac.TemperatureControlView>
 
-    </RelativeLayout>
+    </LinearLayout>
+
+    <!-- HIDDEN REQUIRED SYSTEM BUTTONS (to prevent Dagger/Null crashes) -->
+    <FrameLayout android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone">
+        <com.android.systemui.car.systembar.base.CarSystemBarButton android:id="@+id/passenger_home" style="@style/SystemBarButton"/>
+        <com.android.systemui.car.systembar.base.CarSystemBarButton android:id="@+id/control_center_nav" style="@style/SystemBarButton"/>
+        <com.android.systemui.car.systembar.assistant.AssistantButton android:id="@+id/assistant" style="@style/SystemBarButton"/>
+        <LinearLayout android:id="@+id/lock_screen_nav_buttons" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        <LinearLayout android:id="@+id/occlusion_buttons" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    </FrameLayout>
+
 </com.android.systemui.car.systembar.base.CarSystemBarView>
