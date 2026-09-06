@@ -68,7 +68,7 @@
                 android:id="@+id/navigation_button"
                 style="@style/SystemBarButton"
                 systemui:icon="@drawable/car_ic_navigation"
-                systemui:intent="intent:#Intent;action=android.intent.action.MAIN;component=com.example.campernavigator/.MainActivity;launchFlags=0x14000000;end"
+                systemui:intent="intent:#Intent;action=android.intent.action.MAIN;component=com.example.campernavigator/.MainActivity;launchFlags=0x14000000;B.SHOW_MENU=true;end"
                 systemui:highlightWhenSelected="true"/>
 
             <!-- Fan -->
