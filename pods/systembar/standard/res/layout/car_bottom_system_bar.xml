@@ -57,7 +57,9 @@
             android:id="@+id/navigation_button"
             style="@style/SystemBarButton"
             systemui:icon="@drawable/car_ic_navigation"
-            systemui:intent="intent:#Intent;action=android.intent.action.MAIN;component=com.example.campernavigator/.MainActivity;launchFlags=0x14800000;S.com.example.campernavigator.extra.NAVIGATION_UI_MODE=FULLSCREEN;end"
+            systemui:componentNames="com.example.campernavigator/.MainActivity"
+            systemui:intent="intent:#Intent;action=com.asiks.camper.navigator.action.SET_MODE;S.com.asiks.camper.navigator.extra.MODE=FULLSCREEN;B.com.asiks.camper.navigator.extra.APPLY_SCREEN_TRANSITION=true;end"
+            systemui:broadcast="true"
             systemui:highlightWhenSelected="true"/>
 
         <!-- Fan -->

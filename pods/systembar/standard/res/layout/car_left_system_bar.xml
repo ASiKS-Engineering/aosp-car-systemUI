@@ -67,9 +67,10 @@
             android:id="@+id/maps_nav"
             android:contentDescription="@string/system_bar_maps_label"
             style="@style/SystemBarButton.Vertical"
-            systemui:categories="android.intent.category.APP_MAPS"
+            systemui:componentNames="com.example.campernavigator/.MainActivity"
             systemui:icon="@drawable/car_ic_navigation"
-            systemui:intent="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_MAPS;launchFlags=0x14000000;end"
+            systemui:intent="intent:#Intent;action=com.asiks.camper.navigator.action.SET_MODE;S.com.asiks.camper.navigator.extra.MODE=FULLSCREEN;B.com.asiks.camper.navigator.extra.APPLY_SCREEN_TRANSITION=true;end"
+            systemui:broadcast="true"
             systemui:selectedIcon="@drawable/car_ic_navigation_selected"
             systemui:highlightWhenSelected="true" />
 
