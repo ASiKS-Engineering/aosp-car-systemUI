@@ -37,7 +37,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"/>
 
-        <com.android.systemui.car.systembar.base.CarSystemBarButton
+    <com.android.systemui.car.systembar.base.CarSystemBarButton
         android:id="@+id/btn_media"
         style="@style/SystemBarButton"
         systemui:icon="@drawable/car_ic_music"
@@ -80,9 +80,9 @@
         systemui:intent="intent:#Intent;action=android.intent.action.DIAL;launchFlags=0x14000000;end"/>
 
     <Space
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
 
     <com.android.systemui.car.hvac.TemperatureControlView
         android:id="@+id/passenger_hvac"
