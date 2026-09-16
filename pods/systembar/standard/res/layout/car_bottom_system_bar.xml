@@ -47,7 +47,7 @@
         android:id="@+id/navigation_button"
         style="@style/SystemBarButton"
         systemui:icon="@drawable/car_ic_navigation"
-        systemui:intent="intent:#Intent;action=android.intent.action.MAIN;component=com.example.campernavigator/.MainActivity;launchFlags=0x14800000;S.com.example.campernavigator.extra.NAVIGATION_UI_MODE=FULLSCREEN;B.com.example.campernavigator.extra.SHOW_MENU=true;end"
+        systemui:intent="intent:#Intent;action=android.intent.action.MAIN;component=com.android.car.carlauncher/.CarLauncher;launchFlags=0x14000000;S.com.example.campernavigator.extra.NAVIGATION_UI_MODE=FULLSCREEN;end"
         systemui:highlightWhenSelected="true"/>
 
     <com.android.systemui.car.systembar.base.CarSystemBarButton
@@ -62,7 +62,7 @@
         android:layout_width="90dp"
         android:layout_height="90dp"
         systemui:icon="@drawable/car_ic_home"
-        systemui:intent="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.HOME;launchFlags=0x14000000;end"
+        systemui:intent="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.HOME;component=com.android.car.carlauncher/.CarLauncher;launchFlags=0x14000000;S.com.example.campernavigator.extra.NAVIGATION_UI_MODE=HOME;end"
         systemui:controller="com.android.systemui.car.systembar.home.HomeButtonController"
         systemui:highlightWhenSelected="true"/>
 
