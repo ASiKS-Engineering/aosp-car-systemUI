@@ -157,7 +157,7 @@
 
     <!-- set to false to use the default TaskDisplayArea -->
     <!-- TODO(b/300930725): launcher doesn't show until it's restarted -->
-    <bool name="config_useRemoteLaunchTaskView">false</bool>
+    <bool name="config_useRemoteLaunchTaskView">true</bool>
 
     <!-- Determines how to show navigation bar and status bar on app's immersive request, only
         works if config_remoteInsetsControllerControlsSystemBars is set to true-->
