@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Actions>
-    <!-- Überschreibt das Verhalten des globalen Navigations-Button-Events -->
+    <Action id="global_navigation">
+        <Broadcast action="com.example.campernavigator.action.NAVIGATION_UI_MODE_CHANGED">
+            <Extra key="com.example.campernavigator.extra.NAVIGATION_UI_MODE" value="FULLSCREEN" />
+        </Broadcast>
+    </Action>
     <Action id="com.android.systemui.car.intent.action.NAVIGATE">
         <Broadcast action="com.example.campernavigator.action.NAVIGATION_UI_MODE_CHANGED">
             <Extra key="com.example.campernavigator.extra.NAVIGATION_UI_MODE" value="FULLSCREEN" />
