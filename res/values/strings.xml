@@ -93,6 +93,8 @@
 
     <!-- Status icon for display settings in status bar-->
     <string name="status_icon_display_status">Display Settings</string>
+    <!-- Status icon for system settings in status bar-->
+    <string name="status_icon_settings_status">Settings</string>
     <!-- Status icon for debug settings in status bar-->
     <string name="status_icon_debug_status">Debug Settings</string>
 

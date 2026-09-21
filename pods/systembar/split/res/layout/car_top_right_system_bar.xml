@@ -25,10 +25,24 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/split_system_bar_background"
-        android:layout_centerInParent="true"
-        android:gravity="center"
+        android:background="@drawable/oem_top_bar_background"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <include
+            layout="@layout/qc_status_icons_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <include
+            layout="@layout/user_name_container"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
 
         <FrameLayout
             android:id="@+id/clock_container"
@@ -47,43 +61,6 @@
                 systemui:amPmStyle="gone"
                 />
         </FrameLayout>
-
-        <include layout="@layout/read_only_status_icons"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-
-        <com.android.systemui.car.systembar.base.CarSystemBarButton
-            android:id="@+id/notifications"
-            android:contentDescription="@string/system_bar_notifications_label"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            style="@style/HorizontalBarButton"
-            systemui:highlightWhenSelected="true"
-            systemui:icon="@drawable/car_ic_notification_dock"
-            systemui:longIntent="intent:#Intent;action=com.android.car.bugreport.action.BUG_REPORT;end"
-            systemui:systemBarDisableFlags="notificationIcons"
-            systemui:controller="com.android.systemui.car.notification.NotificationButtonController"/>
-
-        <include layout="@layout/share_to_app_privacy_chip"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-
-        <include layout="@layout/cast_to_other_device_privacy_chip"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-
-        <include layout="@layout/camera_privacy_chip"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-
-        <include layout="@layout/mic_privacy_chip"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/system_bar_mic_privacy_chip" />
-
-        <include layout="@layout/user_name_container"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
 
     </LinearLayout>
 </com.android.systemui.car.systembar.base.CarSystemBarView>

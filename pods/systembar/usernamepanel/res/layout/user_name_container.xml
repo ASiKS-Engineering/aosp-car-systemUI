@@ -45,16 +45,17 @@
             android:gravity="center_vertical">
             <ImageView
                 android:id="@+id/user_avatar"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="@dimen/system_bar_user_icon_width"
+                android:layout_height="@dimen/system_bar_user_icon_height"
                 android:src="@drawable/car_ic_users_icon"
                 android:tint="@color/system_bar_icon_color_with_selection"
-                android:layout_marginEnd="@dimen/system_bar_user_icon_padding"
+                android:layout_marginEnd="0dp"
                 android:contentDescription="@string/system_bar_user_avatar" />
             <com.android.systemui.car.flexibleui.layout.CarSystemBarTextView
                 android:id="@+id/user_name_text"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 android:gravity="center_vertical"
                 style="@style/SystemBarUsernameText"
                 android:singleLine="true"
