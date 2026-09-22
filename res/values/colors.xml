@@ -17,6 +17,18 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <color name="privacy_chip_light_icon_color">@color/car_nav_icon_fill_color_selected</color>
 
+	<!-- OEM-like bottom navigation colors -->
+	<color name="car_nav_icon_color">#FFFFFFFF</color>
+
+	<!-- Selected icon color. Changed later to exact OEM accent color. -->
+	<color name="car_nav_icon_color_selected">#FF1C69D4</color>
+
+	<!-- Very subtle touch feedback -->
+	<color name="car_nav_ripple_color">#26FFFFFF</color>
+
+	<!-- Selected indicator -->
+	<color name="car_nav_indicator_color">#FF1C69D4</color>
+
     <!-- The background color of the car volume dialog -->
     <color name="car_volume_dialog_background_color">@color/system_bar_background_opaque</color>
 

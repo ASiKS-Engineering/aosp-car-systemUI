@@ -18,7 +18,7 @@
         <layer-list>
             <item>
                 <ripple android:color="@color/car_ui_ripple_color">
-                    <item android:drawable="@drawable/nav_bar_button_background_selected" />
+                    <item android:drawable="@android:color/transparent" />
                 </ripple>
             </item>
             <item>
@@ -35,7 +35,7 @@
         <layer-list>
             <item>
                 <ripple android:color="@color/car_ui_ripple_color">
-                    <item android:drawable="@drawable/nav_bar_button_background_selected" />
+                    <item android:drawable="@android:color/transparent" />
                 </ripple>
             </item>
             <item>
@@ -52,7 +52,7 @@
         <layer-list>
             <item>
                 <ripple android:color="@color/car_ui_ripple_color">
-                    <item android:drawable="@drawable/nav_bar_button_background_unselected" />
+                    <item android:drawable="@android:color/transparent" />
                 </ripple>
             </item>
             <item>
@@ -68,7 +68,7 @@
         <layer-list>
             <item>
                 <ripple android:color="@color/car_ui_ripple_color">
-                    <item android:drawable="@drawable/nav_bar_button_background_unselected" />
+                    <item android:drawable="@android:color/transparent" />
                 </ripple>
             </item>
             <item>
@@ -82,7 +82,7 @@
     </item>
     <item android:state_selected="true">
         <ripple android:color="@color/car_ui_ripple_color">
-            <item android:drawable="@drawable/nav_bar_button_background_selected" />
+            <item android:drawable="@android:color/transparent" />
         </ripple>
     </item>
 </selector>
