@@ -116,7 +116,8 @@
             systemui:componentNames="@string/config_homeComponentName"
             systemui:icon="@drawable/car_ic_overview"
             systemui:intent="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.HOME;launchFlags=0x14000000;end"
-            systemui:selectedIcon="@drawable/car_ic_overview_selected"
+            systemui:beforeIntent="intent:#Intent;action=com.asiks.camper.navigator.action.SET_MODE;S.com.asiks.camper.navigator.extra.MODE=HOME;B.com.asiks.camper.navigator.extra.APPLY_SCREEN_TRANSITION=true;end"
+			systemui:selectedIcon="@drawable/car_ic_overview_selected"
             systemui:highlightWhenSelected="true"
             systemui:systemBarDisableFlags="home"
             systemui:controller="com.android.systemui.car.systembar.home.HomeButtonController" />

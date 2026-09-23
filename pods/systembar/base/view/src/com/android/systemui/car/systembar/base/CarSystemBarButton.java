@@ -94,6 +94,8 @@ public class CarSystemBarButton extends LinearLayout implements
     private Intent mSelectedIntent;
     /** The intent to be used while the button is unselected. */
     private Intent mUnselectedIntent;
+	/** Optional intent to broadcast before the main click intent. */
+	private Intent mBeforeIntent;	
     private String mLongIntent;
     /** The event to be used while the button is selected. */
     private String mSelectedEvent;
@@ -391,7 +393,8 @@ public class CarSystemBarButton extends LinearLayout implements
                 unselectedIntentString != null ? unselectedIntentString : intentString;
         mLongIntent = typedArray.getString(R.styleable.CarSystemBarButton_longIntent);
         mBroadcastIntent = typedArray.getBoolean(R.styleable.CarSystemBarButton_broadcast, false);
-
+		String beforeIntentString = typedArray.getString(R.styleable.CarSystemBarButton_beforeIntent);
+		
         String eventString = typedArray.getString(R.styleable.CarSystemBarButton_event);
         String selectedEventString =
                 typedArray.getString(R.styleable.CarSystemBarButton_selectedEvent);
@@ -405,6 +408,9 @@ public class CarSystemBarButton extends LinearLayout implements
                 false);
 
         try {
+			if (beforeIntentString != null) {
+				mBeforeIntent = Intent.parseUri(beforeIntentString, Intent.URI_INTENT_SCHEME);
+				}
             if (selectedIntentString != null) {
                 mSelectedIntent = Intent.parseUri(selectedIntentString, Intent.URI_INTENT_SCHEME);
                 if (mButtonPackages != null) {
@@ -459,7 +465,16 @@ public class CarSystemBarButton extends LinearLayout implements
                 mEventDispatcher.executeEvent(getEvent());
             }
 
-            if (getIntent() != null) {
+            if (mBeforeIntent != null) {
+				try {
+					mContext.sendBroadcastAsUser(
+							mBeforeIntent,
+							getCurrentUserHandle(mContext, mUserTracker));
+				} catch (Exception e) {
+					Log.e(TAG, "Failed to send before-click intent", e);
+				}
+			}
+			if (getIntent() != null) {
                 boolean intentLaunched = false;
                 try {
                     if (mBroadcastIntent) {

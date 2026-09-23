@@ -46,6 +46,8 @@
         <attr name="unselectedEvent" format="string"/>
         <!-- start the intent as a broad cast instead of an activity if true-->
         <attr name="broadcast" format="boolean"/>
+		<!-- Optional intent to broadcast before the main click intent -->
+		<attr name="beforeIntent" format="string"/>
         <!-- Alpha value to used when in selected state.  Defaults 1f  -->
         <attr name="selectedAlpha" />
         <!-- Alpha value to used when in un-selected state.  Defaults 0.7f  -->
