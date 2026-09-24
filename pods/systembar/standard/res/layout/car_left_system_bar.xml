@@ -21,7 +21,7 @@
     xmlns:systemui="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:background="@drawable/nav_bar_background"
+    android:background="@android:color/transparent"
     android:weightSum="3"
     android:orientation="vertical">
 
@@ -69,8 +69,7 @@
             style="@style/SystemBarButton.Vertical"
             systemui:componentNames="com.example.campernavigator/.MainActivity"
             systemui:icon="@drawable/car_ic_navigation"
-            systemui:intent="intent:#Intent;action=com.asiks.camper.navigator.action.SET_MODE;S.com.asiks.camper.navigator.extra.MODE=FULLSCREEN;B.com.asiks.camper.navigator.extra.APPLY_SCREEN_TRANSITION=true;end"
-            systemui:broadcast="true"
+            systemui:intent="intent:#Intent;action=android.intent.action.MAIN;component=com.android.car.carlauncher/.CarLauncher;launchFlags=0x14000000;S.com.example.campernavigator.extra.NAVIGATION_UI_MODE=FULLSCREEN;end"
             systemui:selectedIcon="@drawable/car_ic_navigation_selected"
             systemui:highlightWhenSelected="true" />
 
@@ -112,8 +111,7 @@
             style="@style/SystemBarButton.Vertical"
             systemui:componentNames="@string/config_homeComponentName"
             systemui:icon="@drawable/car_ic_overview"
-            systemui:intent="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.HOME;launchFlags=0x14000000;end"
-            systemui:beforeIntent="intent:#Intent;action=com.asiks.camper.navigator.action.SET_MODE;S.com.asiks.camper.navigator.extra.MODE=HOME;B.com.asiks.camper.navigator.extra.APPLY_SCREEN_TRANSITION=true;end"
+            systemui:intent="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.HOME;component=com.android.car.carlauncher/.CarLauncher;launchFlags=0x14000000;S.com.example.campernavigator.extra.NAVIGATION_UI_MODE=HOME;end"
 			systemui:selectedIcon="@drawable/car_ic_overview_selected"
             systemui:highlightWhenSelected="true"
             systemui:systemBarDisableFlags="home"

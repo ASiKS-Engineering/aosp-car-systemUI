@@ -20,7 +20,7 @@
     xmlns:systemui="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/nav_bar_background"
+    android:background="@android:color/transparent"
     android:orientation="vertical">
 
     <LinearLayout
@@ -38,7 +38,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/system_bar_home_label"
             systemui:icon="@drawable/car_ic_overview"
-            systemui:intent="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.HOME;launchFlags=0x14000000;end"
+            systemui:intent="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.HOME;component=com.android.car.carlauncher/.CarLauncher;launchFlags=0x14000000;S.com.example.campernavigator.extra.NAVIGATION_UI_MODE=HOME;end"
             systemui:selectedIcon="@drawable/car_ic_overview_selected"
             systemui:highlightWhenSelected="true"
             systemui:systemBarDisableFlags="home"

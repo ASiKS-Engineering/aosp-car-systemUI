@@ -23,7 +23,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/nav_bar_background">
+    android:background="@android:color/transparent">
 
     <LinearLayout
         android:layout_height="match_parent"
@@ -44,7 +44,7 @@
             android:paddingTop="30dp"
             android:paddingBottom="30dp"
             android:contentDescription="@string/system_bar_home_label"
-            systemui:intent="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.HOME;launchFlags=0x14000000;end"
+            systemui:intent="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.HOME;component=com.android.car.carlauncher/.CarLauncher;launchFlags=0x14000000;S.com.example.campernavigator.extra.NAVIGATION_UI_MODE=HOME;end"
             systemui:systemBarDisableFlags="home"
             systemui:controller="com.android.systemui.car.systembar.home.HomeButtonController"/>
 
