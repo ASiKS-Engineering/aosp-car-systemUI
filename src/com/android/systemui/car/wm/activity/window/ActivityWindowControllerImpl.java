@@ -171,7 +171,9 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
                             });
 
                         ViewGroup layout = (ViewGroup) mLayout.findViewById(R.id.activity_area);
-                        layout.addView(taskView);
+						// Diagnostic: don't attach the RemoteCarDefaultRootTaskView.
+                        //layout.addView(taskView);
+						Log.d(TAG, "Diagnostic: RemoteCarDefaultRootTaskView NOT attached");
                     }
 
                     @Override
