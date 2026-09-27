@@ -118,7 +118,8 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
         mWmLayoutParams.layoutInDisplayCutoutMode = LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
         mWmLayoutParams.privateFlags |= WindowManager.LayoutParams.SYSTEM_FLAG_SHOW_FOR_ALL_USERS;
 
-        mWindowManager.addView(mLayout, mWmLayoutParams);
+        //Do not add ActivityWindow
+		//mWindowManager.addView(mLayout, mWmLayoutParams);
     }
 
     private void setupRemoteCarTaskView() {
