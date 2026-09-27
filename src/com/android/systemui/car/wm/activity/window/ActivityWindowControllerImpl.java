@@ -354,7 +354,7 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
                                  * Keep the task view above the
                                  * ActivityWindow background.
                                  */
-                                taskView.setZOrderMediaOverlay(true);
+                                taskView.setZOrderMediaOverlay(false);
 
                                 ViewGroup layout =
                                         (ViewGroup)
