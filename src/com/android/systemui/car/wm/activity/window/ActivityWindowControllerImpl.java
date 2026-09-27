@@ -370,7 +370,8 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
                                  * no SurfaceView through which it can
                                  * be displayed.
                                  */
-                                layout.addView(taskView);
+                                taskView.setVisibility(View.INVISIBLE);
+								layout.addView(taskView);
 
                                 /*
                                  * Start in HOME mode.
