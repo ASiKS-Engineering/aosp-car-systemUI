@@ -1,6 +1,7 @@
 package com.android.systemui.car.wm.activity.window;
 
 import static android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
+import static android.view.WindowManager.LayoutParams.TOUCHABLE_INSETS_REGION;
 
 import android.annotation.NonNull;
 import android.car.app.CarActivityManager;
@@ -12,13 +13,11 @@ import android.car.app.RemoteCarDefaultRootTaskViewCallback;
 import android.car.app.RemoteCarDefaultRootTaskViewConfig;
 import android.content.Context;
 import android.graphics.PixelFormat;
-import android.graphics.Rect;
 import android.os.Binder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 
@@ -35,19 +34,25 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
 
     @NonNull
     private final Context mContext;
+
     @NonNull
     private final WindowManager mWindowManager;
+
     @NonNull
     private final CarServiceProvider mCarServiceProvider;
+
     @NonNull
     private ViewGroup mLayout;
+
     @NonNull
     private WindowManager.LayoutParams mWmLayoutParams;
 
     @NonNull
     private CarTaskViewController mCarTaskViewController;
+
     @NonNull
     private CarTaskViewControllerHostLifecycle mCarTaskViewControllerHostLifecycle;
+
     @NonNull
     private CarActivityManager mCarActivityManager;
 
@@ -62,7 +67,9 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
             };
 
     @Inject
-    public ActivityWindowControllerImpl(Context context, WindowManager windowManager,
+    public ActivityWindowControllerImpl(
+            Context context,
+            WindowManager windowManager,
             CarServiceProvider carServiceProvider,
             CarTaskViewControllerHostLifecycle carTaskViewControllerHostLifecycle) {
         mContext = context;
@@ -83,13 +90,13 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
                 .inflate(R.layout.car_activity_window, /* root= */ null);
 
         mWmLayoutParams = new WindowManager.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                    | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                    | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-            PixelFormat.TRANSLUCENT);
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                        | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                PixelFormat.TRANSLUCENT);
 
         mWmLayoutParams.setTrustedOverlay();
         mWmLayoutParams.setFitInsetsTypes(0);
@@ -103,57 +110,31 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
         mWmLayoutParams.privateFlags |=
                 WindowManager.LayoutParams.SYSTEM_FLAG_SHOW_FOR_ALL_USERS;
 
+        /*
+         * ActivityWindow muss weiterhin existieren, damit der Activity-/TaskView-
+         * Mechanismus funktioniert.
+         *
+         * Wichtig:
+         * Die Window-Touch-Region wird weiter unten auf EMPTY gesetzt.
+         * Dadurch blockiert ActivityWindow keine Touches von:
+         *
+         *  - CarLauncher
+         *  - Navigation
+         *  - IME / On-Screen-Keyboard
+         *  - anderen darüberliegenden Fenstern
+         *
+         * Die eigentlichen Top-/Bottom-SystemUI-Fenster sind eigene Windows
+         * und sollen ihre Touches selbst behandeln.
+         */
         mWindowManager.addView(mLayout, mWmLayoutParams);
 
         /*
-         * The ActivityWindow covers the complete display, but it should only
-         * receive touch input in the SystemUI top and bottom bars.
-         *
-         * The center area is intentionally excluded from the touchable region
-         * so that the Launcher / Navigation window below can receive input.
+         * ActivityWindow selbst soll keine Touches beanspruchen.
          */
         mLayout.getViewTreeObserver().addOnComputeInternalInsetsListener(
-                new ViewTreeObserver.OnComputeInternalInsetsListener() {
-                    @Override
-                    public void onComputeInternalInsets(
-                            ViewTreeObserver.InternalInsetsInfo info) {
-
-                        info.touchableRegion.setEmpty();
-
-                        final int width = mLayout.getWidth();
-                        final int height = mLayout.getHeight();
-
-                        if (width <= 0 || height <= 0) {
-                            info.setTouchableInsets(
-                                    ViewTreeObserver.InternalInsetsInfo
-                                            .TOUCHABLE_INSETS_REGION);
-                            return;
-                        }
-
-                        // Current display: 1024 x 600
-                        // Top bar:    y = 0 .. 76
-                        // Bottom bar: y = 504 .. 600
-                        final int topBarHeight = 76;
-                        final int bottomBarHeight = 96;
-
-                        info.touchableRegion.union(
-                                new Rect(
-                                        0,
-                                        0,
-                                        width,
-                                        Math.min(topBarHeight, height)));
-
-                        info.touchableRegion.union(
-                                new Rect(
-                                        0,
-                                        Math.max(0, height - bottomBarHeight),
-                                        width,
-                                        height));
-
-                        info.setTouchableInsets(
-                                ViewTreeObserver.InternalInsetsInfo
-                                        .TOUCHABLE_INSETS_REGION);
-                    }
+                info -> {
+                    info.touchableRegion.setEmpty();
+                    info.setTouchableInsets(TOUCHABLE_INSETS_REGION);
                 });
     }
 
@@ -191,6 +172,7 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
                             @NonNull RemoteCarDefaultRootTaskView taskView) {
 
                         Log.d(TAG, "Root Task View is created");
+
                         taskView.setZOrderMediaOverlay(true);
 
                         mLayout.setOnApplyWindowInsetsListener(
@@ -207,19 +189,31 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
                                                 insets.getSystemWindowInsetBottom());
 
                                         return insets.replaceSystemWindowInsets(
-                                                0, 0, 0, 0);
+                                                /* left */ 0,
+                                                /* top */ 0,
+                                                /* right */ 0,
+                                                /* bottom */ 0);
                                     }
                                 });
 
-                        ViewGroup layout = (ViewGroup)
-                                mLayout.findViewById(R.id.activity_area);
+                        ViewGroup layout =
+                                (ViewGroup) mLayout.findViewById(R.id.activity_area);
 
-                        // IMPORTANT:
-                        // Do not attach RemoteCarDefaultRootTaskView.
-                        // It creates the SurfaceView that previously produced
-                        // the full-screen opaque black layer.
-                        Log.d(TAG,
-                                "RemoteCarDefaultRootTaskView NOT attached");
+                        /*
+                         * Diagnosemodus:
+                         *
+                         * RemoteCarDefaultRootTaskView wird weiterhin NICHT
+                         * in ActivityWindow eingefügt.
+                         *
+                         * Dadurch können wir sauber testen, ob allein das
+                         * ActivityWindow/Input-Handling die Touch-Probleme
+                         * verursacht.
+                         */
+                        // layout.addView(taskView);
+
+                        Log.d(
+                                TAG,
+                                "Diagnostic: RemoteCarDefaultRootTaskView NOT attached");
                     }
 
                     @Override
