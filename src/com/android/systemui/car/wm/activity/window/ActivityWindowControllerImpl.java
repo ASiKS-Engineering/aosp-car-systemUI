@@ -1,7 +1,6 @@
 package com.android.systemui.car.wm.activity.window;
 
 import static android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
-import static android.view.WindowManager.LayoutParams.TOUCHABLE_INSETS_REGION;
 
 import android.annotation.NonNull;
 import android.car.app.CarActivityManager;
@@ -18,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.InternalInsetsInfo;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 
@@ -111,30 +111,35 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
                 WindowManager.LayoutParams.SYSTEM_FLAG_SHOW_FOR_ALL_USERS;
 
         /*
-         * ActivityWindow muss weiterhin existieren, damit der Activity-/TaskView-
+         * ActivityWindow muss vorhanden sein, damit der Activity-/TaskView-
          * Mechanismus funktioniert.
          *
-         * Wichtig:
-         * Die Window-Touch-Region wird weiter unten auf EMPTY gesetzt.
-         * Dadurch blockiert ActivityWindow keine Touches von:
+         * Das Window selbst soll aber keine Touches abfangen.
          *
-         *  - CarLauncher
-         *  - Navigation
-         *  - IME / On-Screen-Keyboard
-         *  - anderen darüberliegenden Fenstern
+         * Top- und Bottom-SystemUI besitzen eigene Windows und sollen
+         * ihre Touches selbst behandeln.
          *
-         * Die eigentlichen Top-/Bottom-SystemUI-Fenster sind eigene Windows
-         * und sollen ihre Touches selbst behandeln.
+         * Ebenso sollen Launcher, Navigation, IME und andere darüberliegende
+         * Fenster ihre Touches bekommen können.
          */
         mWindowManager.addView(mLayout, mWmLayoutParams);
 
         /*
-         * ActivityWindow selbst soll keine Touches beanspruchen.
+         * ActivityWindow bekommt eine leere Touch-Region.
+         *
+         * Dadurch wird verhindert, dass dieses fullscreen Window Touches
+         * aus anderen Bereichen abfängt, insbesondere:
+         *
+         * - CarLauncher
+         * - Navigation
+         * - On-Screen-Keyboard / IME
+         * - andere überlagernde Windows
          */
         mLayout.getViewTreeObserver().addOnComputeInternalInsetsListener(
                 info -> {
                     info.touchableRegion.setEmpty();
-                    info.setTouchableInsets(TOUCHABLE_INSETS_REGION);
+                    info.setTouchableInsets(
+                            InternalInsetsInfo.TOUCHABLE_INSETS_REGION);
                 });
     }
 
@@ -205,9 +210,8 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
                          * RemoteCarDefaultRootTaskView wird weiterhin NICHT
                          * in ActivityWindow eingefügt.
                          *
-                         * Dadurch können wir sauber testen, ob allein das
-                         * ActivityWindow/Input-Handling die Touch-Probleme
-                         * verursacht.
+                         * Damit testen wir zunächst ausschließlich das
+                         * Window-/Input-Verhalten von ActivityWindow.
                          */
                         // layout.addView(taskView);
 
@@ -223,3 +227,4 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
                 });
     }
 }
+
