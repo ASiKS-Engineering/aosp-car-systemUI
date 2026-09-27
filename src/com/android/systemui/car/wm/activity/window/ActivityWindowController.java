@@ -19,6 +19,7 @@ package com.android.systemui.car.wm.activity.window;
  * Interface for classes that handle the window for hosting the activities.
  */
 public interface ActivityWindowController {
+
     /**
      * Call to initialize the controller.
      */

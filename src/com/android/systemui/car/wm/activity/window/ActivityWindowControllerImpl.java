@@ -10,8 +10,12 @@ import android.car.app.CarTaskViewControllerHostLifecycle;
 import android.car.app.RemoteCarDefaultRootTaskView;
 import android.car.app.RemoteCarDefaultRootTaskViewCallback;
 import android.car.app.RemoteCarDefaultRootTaskViewConfig;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.os.Binder;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,7 +34,24 @@ import com.android.systemui.dagger.qualifiers.UiBackground;
 import javax.inject.Inject;
 
 public class ActivityWindowControllerImpl implements ActivityWindowController {
-    public static final String TAG = ActivityWindowController.class.getSimpleName();
+
+    public static final String TAG =
+            ActivityWindowController.class.getSimpleName();
+
+    /*
+     * Navigator application sends this broadcast through scalable_ui_actions.xml.
+     */
+    private static final String ACTION_NAVIGATION_UI_MODE_CHANGED =
+            "com.example.campernavigator.action.NAVIGATION_UI_MODE_CHANGED";
+
+    private static final String EXTRA_NAVIGATION_UI_MODE =
+            "com.example.campernavigator.extra.NAVIGATION_UI_MODE";
+
+    private static final String NAVIGATION_MODE_FULLSCREEN =
+            "FULLSCREEN";
+
+    private static final String NAVIGATION_MODE_HOME =
+            "HOME";
 
     @NonNull
     private final Context mContext;
@@ -56,38 +77,110 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
     @NonNull
     private CarActivityManager mCarActivityManager;
 
+    /*
+     * The RemoteCarDefaultRootTaskView hosts the Launcher/Home task and
+     * normal application tasks such as the Navigator.
+     */
+    private RemoteCarDefaultRootTaskView mTaskView;
+
+    /*
+     * Current system bar insets.
+     *
+     * These are used for HOME mode so the embedded task occupies only
+     * the application/content area.
+     */
+    private int mTopInset;
+    private int mBottomInset;
+
+    /*
+     * Current navigation display mode.
+     *
+     * Default is HOME because the Launcher is the initial state.
+     */
+    private boolean mNavigationFullscreen = false;
+
+    @NonNull
+    private final BroadcastReceiver mNavigationUiModeReceiver =
+            new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (!ACTION_NAVIGATION_UI_MODE_CHANGED.equals(
+                            intent.getAction())) {
+                        return;
+                    }
+
+                    String mode = intent.getStringExtra(
+                            EXTRA_NAVIGATION_UI_MODE);
+
+                    if (NAVIGATION_MODE_FULLSCREEN.equals(mode)) {
+                        Log.i(TAG, "Navigation UI mode: FULLSCREEN");
+                        showNavigationFullscreen();
+                    } else if (NAVIGATION_MODE_HOME.equals(mode)) {
+                        Log.i(TAG, "Navigation UI mode: HOME");
+                        showHomeMode();
+                    } else {
+                        Log.w(
+                                TAG,
+                                "Unknown navigation UI mode: " + mode);
+                    }
+                }
+            };
+
     @NonNull
     @UiBackground
-    private final CarServiceProvider.CarServiceOnConnectedListener mCarServiceLifecycleListener =
-            car -> {
-                mCarActivityManager = car.getCarManager(CarActivityManager.class);
+    private final CarServiceProvider.CarServiceOnConnectedListener
+            mCarServiceLifecycleListener = car -> {
 
-                inflate();
-                setupRemoteCarTaskView();
-            };
+        mCarActivityManager =
+                car.getCarManager(CarActivityManager.class);
+
+        inflate();
+        setupRemoteCarTaskView();
+    };
 
     @Inject
     public ActivityWindowControllerImpl(
             Context context,
             WindowManager windowManager,
             CarServiceProvider carServiceProvider,
-            CarTaskViewControllerHostLifecycle carTaskViewControllerHostLifecycle) {
+            CarTaskViewControllerHostLifecycle
+                    carTaskViewControllerHostLifecycle) {
+
         mContext = context;
         mWindowManager = windowManager;
         mCarServiceProvider = carServiceProvider;
-        mCarTaskViewControllerHostLifecycle = carTaskViewControllerHostLifecycle;
+        mCarTaskViewControllerHostLifecycle =
+                carTaskViewControllerHostLifecycle;
     }
 
     @MainThread
     @Override
     public void init() {
-        mCarServiceProvider.addListener(mCarServiceLifecycleListener);
+        /*
+         * Listen for FULLSCREEN / HOME mode changes.
+         */
+        IntentFilter filter = new IntentFilter(
+                ACTION_NAVIGATION_UI_MODE_CHANGED);
+
+        mContext.registerReceiver(
+                mNavigationUiModeReceiver,
+                filter,
+                Context.RECEIVER_EXPORTED);
+
+        /*
+         * Connect to CarService.
+         */
+        mCarServiceProvider.addListener(
+                mCarServiceLifecycleListener);
     }
 
     @MainThread
     protected void inflate() {
+
         mLayout = (ViewGroup) LayoutInflater.from(mContext)
-                .inflate(R.layout.car_activity_window, /* root= */ null);
+                .inflate(
+                        R.layout.car_activity_window,
+                        /* root= */ null);
 
         mWmLayoutParams = new WindowManager.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -99,132 +192,416 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
                 PixelFormat.TRANSLUCENT);
 
         mWmLayoutParams.setTrustedOverlay();
+
+        /*
+         * ActivityWindow uses the full display.
+         *
+         * We handle the actual Task bounds ourselves with
+         * RemoteCarTaskView.setWindowBounds().
+         */
         mWmLayoutParams.setFitInsetsTypes(0);
+
         mWmLayoutParams.softInputMode =
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
+
         mWmLayoutParams.token = new Binder();
+
         mWmLayoutParams.setTitle("ActivityWindow!");
-        mWmLayoutParams.packageName = mContext.getPackageName();
+
+        mWmLayoutParams.packageName =
+                mContext.getPackageName();
+
         mWmLayoutParams.layoutInDisplayCutoutMode =
                 LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
+
         mWmLayoutParams.privateFlags |=
                 WindowManager.LayoutParams.SYSTEM_FLAG_SHOW_FOR_ALL_USERS;
 
         /*
-         * ActivityWindow muss vorhanden sein, damit der Activity-/TaskView-
-         * Mechanismus funktioniert.
+         * The ActivityWindow itself must exist because the
+         * RemoteCarTaskView/SurfaceView needs a host window.
          *
-         * Das Window selbst soll aber keine Touches abfangen.
+         * The window must NOT consume touch input.
          *
-         * Top- und Bottom-SystemUI besitzen eigene Windows und sollen
-         * ihre Touches selbst behandeln.
-         *
-         * Ebenso sollen Launcher, Navigation, IME und andere darüberliegende
-         * Fenster ihre Touches bekommen können.
-         */
-        mWindowManager.addView(mLayout, mWmLayoutParams);
-
-        /*
-         * ActivityWindow bekommt eine leere Touch-Region.
-         *
-         * Dadurch wird verhindert, dass dieses fullscreen Window Touches
-         * aus anderen Bereichen abfängt, insbesondere:
+         * This is important for:
          *
          * - CarLauncher
-         * - Navigation
-         * - On-Screen-Keyboard / IME
-         * - andere überlagernde Windows
+         * - Navigator
+         * - IME / on-screen keyboard
+         * - Top SystemUI
+         * - Bottom SystemUI
          */
-        mLayout.getViewTreeObserver().addOnComputeInternalInsetsListener(
-                info -> {
-                    info.touchableRegion.setEmpty();
-                    info.setTouchableInsets(
-                            InternalInsetsInfo.TOUCHABLE_INSETS_REGION);
+        mWindowManager.addView(
+                mLayout,
+                mWmLayoutParams);
+
+        /*
+         * Keep ActivityWindow completely non-touchable.
+         *
+         * Do NOT use a top/bottom touch region here.
+         *
+         * Top and Bottom SystemUI are separate windows, and the IME
+         * can also occupy areas that overlap those coordinates.
+         */
+        mLayout.getViewTreeObserver()
+                .addOnComputeInternalInsetsListener(
+                        info -> {
+                            info.touchableRegion.setEmpty();
+
+                            info.setTouchableInsets(
+                                    InternalInsetsInfo
+                                            .TOUCHABLE_INSETS_REGION);
+                        });
+
+        /*
+         * Remember system bar insets.
+         *
+         * These values are later used to calculate the HOME bounds.
+         */
+        mLayout.setOnApplyWindowInsetsListener(
+                (view, insets) -> {
+
+                    android.graphics.Insets systemBars =
+                            insets.getInsets(
+                                    WindowInsets.Type.systemBars());
+
+                    mTopInset = systemBars.top;
+                    mBottomInset = systemBars.bottom;
+
+                    Log.d(
+                            TAG,
+                            "Window insets: top="
+                                    + mTopInset
+                                    + " bottom="
+                                    + mBottomInset);
+
+                    /*
+                     * We intentionally do not apply the insets as
+                     * padding to mLayout.
+                     *
+                     * The ActivityWindow stays fullscreen.
+                     * The RemoteCarTaskView gets explicit screen
+                     * coordinates instead.
+                     */
+                    return insets;
                 });
     }
 
     private void setupRemoteCarTaskView() {
+
         mCarActivityManager.getCarTaskViewController(
                 mContext,
                 mCarTaskViewControllerHostLifecycle,
                 mContext.getMainExecutor(),
                 new CarTaskViewControllerCallback() {
+
                     @Override
                     public void onConnected(
-                            CarTaskViewController carTaskViewController) {
-                        mCarTaskViewController = carTaskViewController;
+                            CarTaskViewController
+                                    carTaskViewController) {
+
+                        Log.d(
+                                TAG,
+                                "CarTaskViewController connected");
+
+                        mCarTaskViewController =
+                                carTaskViewController;
+
                         taskViewControllerReady();
                     }
 
                     @Override
                     public void onDisconnected(
-                            CarTaskViewController carTaskViewController) {
+                            CarTaskViewController
+                                    carTaskViewController) {
+
+                        Log.d(
+                                TAG,
+                                "CarTaskViewController disconnected");
+
+                        mCarTaskViewController = null;
+                        mTaskView = null;
                     }
                 });
     }
 
     private void taskViewControllerReady() {
-        mCarTaskViewController.createRemoteCarDefaultRootTaskView(
-                new RemoteCarDefaultRootTaskViewConfig.Builder()
-                        .setDisplayId(mContext.getDisplayId())
-                        .embedHomeTask(true)
-                        .embedRecentsTask(true)
-                        .build(),
-                mContext.getMainExecutor(),
-                new RemoteCarDefaultRootTaskViewCallback() {
-                    @Override
-                    public void onTaskViewCreated(
-                            @NonNull RemoteCarDefaultRootTaskView taskView) {
 
-                        Log.d(TAG, "Root Task View is created");
+        mCarTaskViewController
+                .createRemoteCarDefaultRootTaskView(
+                        new RemoteCarDefaultRootTaskViewConfig.Builder()
+                                .setDisplayId(
+                                        mContext.getDisplayId())
+                                .embedHomeTask(true)
+                                .embedRecentsTask(true)
+                                .build(),
+                        mContext.getMainExecutor(),
+                        new RemoteCarDefaultRootTaskViewCallback() {
 
-                        taskView.setZOrderMediaOverlay(true);
+                            @Override
+                            public void onTaskViewCreated(
+                                    @NonNull
+                                    RemoteCarDefaultRootTaskView
+                                            taskView) {
 
-                        mLayout.setOnApplyWindowInsetsListener(
-                                new View.OnApplyWindowInsetsListener() {
-                                    @Override
-                                    public WindowInsets onApplyWindowInsets(
-                                            View view,
-                                            WindowInsets insets) {
+                                Log.d(
+                                        TAG,
+                                        "Root Task View is created");
 
-                                        mLayout.setPadding(
-                                                insets.getSystemWindowInsetLeft(),
-                                                insets.getSystemWindowInsetTop(),
-                                                insets.getSystemWindowInsetRight(),
-                                                insets.getSystemWindowInsetBottom());
+                                mTaskView = taskView;
 
-                                        return insets.replaceSystemWindowInsets(
-                                                /* left */ 0,
-                                                /* top */ 0,
-                                                /* right */ 0,
-                                                /* bottom */ 0);
+                                /*
+                                 * Keep the task view above the
+                                 * ActivityWindow background.
+                                 */
+                                taskView.setZOrderMediaOverlay(true);
+
+                                ViewGroup layout =
+                                        (ViewGroup)
+                                                mLayout.findViewById(
+                                                        R.id.activity_area);
+
+                                /*
+                                 * IMPORTANT:
+                                 *
+                                 * The TaskView is attached again.
+                                 *
+                                 * Without this, the Navigator task has
+                                 * no SurfaceView through which it can
+                                 * be displayed.
+                                 */
+                                layout.addView(taskView);
+
+                                /*
+                                 * Start in HOME mode.
+                                 *
+                                 * This gives us:
+                                 *
+                                 *   Launcher visible
+                                 *   Navigator in content area
+                                 *   Top/Bottom SystemUI untouched
+                                 */
+                                applyHomeBounds();
+
+                                Log.d(
+                                        TAG,
+                                        "RemoteCarDefaultRootTaskView attached");
+                            }
+
+                            @Override
+                            public void onTaskViewInitialized() {
+
+                                Log.d(
+                                        TAG,
+                                        "Root Task View is ready");
+
+                                /*
+                                 * Re-apply the current state after
+                                 * TaskView initialization.
+                                 */
+                                if (mTaskView != null) {
+                                    if (mNavigationFullscreen) {
+                                        applyFullscreenBounds();
+                                    } else {
+                                        applyHomeBounds();
                                     }
-                                });
+                                }
+                            }
+                        });
+    }
 
-                        ViewGroup layout =
-                                (ViewGroup) mLayout.findViewById(R.id.activity_area);
+    /**
+     * Switch to fullscreen navigation mode.
+     *
+     * Result:
+     *
+     *   +------------------------------------------+
+     *   |                 NAVIGATION               |
+     *   |                                          |
+     *   |             FULL DISPLAY                 |
+     *   |                                          |
+     *   +------------------------------------------+
+     *
+     * Launcher/widget are behind the navigation task.
+     */
+    private void showNavigationFullscreen() {
 
-                        /*
-                         * Diagnosemodus:
-                         *
-                         * RemoteCarDefaultRootTaskView wird weiterhin NICHT
-                         * in ActivityWindow eingefügt.
-                         *
-                         * Damit testen wir zunächst ausschließlich das
-                         * Window-/Input-Verhalten von ActivityWindow.
-                         */
-                        // layout.addView(taskView);
+        mNavigationFullscreen = true;
 
-                        Log.d(
-                                TAG,
-                                "Diagnostic: RemoteCarDefaultRootTaskView NOT attached");
-                    }
+        if (mTaskView == null) {
+            Log.w(
+                    TAG,
+                    "Cannot enter fullscreen navigation: "
+                            + "TaskView is not ready");
+            return;
+        }
 
-                    @Override
-                    public void onTaskViewInitialized() {
-                        Log.d(TAG, "Root Task View is ready");
-                    }
-                });
+        applyFullscreenBounds();
+    }
+
+    /**
+     * Switch back to normal HOME mode.
+     *
+     * Result:
+     *
+     *   +------------------------------------------+
+     *   |              TOP SYSTEMUI                |
+     *   +------------------------------------------+
+     *   |                                          |
+     *   |       Launcher + Navigation area        |
+     *   |                                          |
+     *   +------------------------------------------+
+     *   |            BOTTOM SYSTEMUI               |
+     *   +------------------------------------------+
+     */
+    private void showHomeMode() {
+
+        mNavigationFullscreen = false;
+
+        if (mTaskView == null) {
+            Log.w(
+                    TAG,
+                    "Cannot enter home mode: "
+                            + "TaskView is not ready");
+            return;
+        }
+
+        applyHomeBounds();
+    }
+
+    /**
+     * Makes the embedded task occupy the entire display.
+     */
+    private void applyFullscreenBounds() {
+
+        if (mTaskView == null) {
+            return;
+        }
+
+        int width = mLayout.getWidth();
+        int height = mLayout.getHeight();
+
+        /*
+         * During very early startup the layout can still report zero.
+         * Use the display metrics as fallback.
+         */
+        if (width <= 0) {
+            width = mContext.getResources()
+                    .getDisplayMetrics()
+                    .widthPixels;
+        }
+
+        if (height <= 0) {
+            height = mContext.getResources()
+                    .getDisplayMetrics()
+                    .heightPixels;
+        }
+
+        Rect bounds = new Rect(
+                0,
+                0,
+                width,
+                height);
+
+        Log.d(
+                TAG,
+                "Applying FULLSCREEN bounds: "
+                        + bounds);
+
+        /*
+         * RemoteCarTaskView.setWindowBounds() expects
+         * screen coordinates.
+         */
+        mTaskView.setWindowBounds(bounds);
+
+        /*
+         * Ensure the embedded task is visible.
+         *
+         * We intentionally do not reorder the root task here.
+         * The launch-root/task transition machinery is responsible
+         * for task ordering.
+         */
+        mTaskView.showEmbeddedTask();
+    }
+
+    /**
+     * Makes the embedded task occupy the normal application/content
+     * area between the Top and Bottom SystemUI windows.
+     */
+    private void applyHomeBounds() {
+
+        if (mTaskView == null) {
+            return;
+        }
+
+        int width = mLayout.getWidth();
+        int height = mLayout.getHeight();
+
+        /*
+         * During very early startup the layout can still report zero.
+         * Use the display metrics as fallback.
+         */
+        if (width <= 0) {
+            width = mContext.getResources()
+                    .getDisplayMetrics()
+                    .widthPixels;
+        }
+
+        if (height <= 0) {
+            height = mContext.getResources()
+                    .getDisplayMetrics()
+                    .heightPixels;
+        }
+
+        /*
+         * Normal application/content area:
+         *
+         * top    = below Top SystemUI
+         * bottom = above Bottom SystemUI
+         */
+        int top = mTopInset;
+        int bottom = height - mBottomInset;
+
+        /*
+         * Safety fallback if insets have not arrived yet.
+         *
+         * Our current display is 1024x600 with:
+         *
+         *   Top    = 76
+         *   Bottom = 96
+         *
+         * But we do NOT hard-code those values.
+         */
+        if (bottom <= top) {
+            top = 0;
+            bottom = height;
+        }
+
+        Rect bounds = new Rect(
+                0,
+                top,
+                width,
+                bottom);
+
+        Log.d(
+                TAG,
+                "Applying HOME bounds: "
+                        + bounds
+                        + " topInset="
+                        + mTopInset
+                        + " bottomInset="
+                        + mBottomInset);
+
+        mTaskView.setWindowBounds(bounds);
+
+        /*
+         * Keep the embedded task visible.
+         *
+         * We do not call reorderTask(false) here because this is the
+         * root launch task containing both HOME and standard tasks.
+         * Moving that entire root task behind HOME would also move
+         * the Navigator behind it.
+         */
+        mTaskView.showEmbeddedTask();
     }
 }
-
