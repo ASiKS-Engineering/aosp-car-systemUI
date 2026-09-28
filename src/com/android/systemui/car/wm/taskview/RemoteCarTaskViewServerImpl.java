@@ -102,12 +102,20 @@ public class RemoteCarTaskViewServerImpl implements TaskViewBase {
         @Override
         public void notifySurfaceCreated(SurfaceControl control) {
             ensureManageSystemUIPermission(mContext);
+            if (control == null) {
+                Slog.e(TAG, "notifySurfaceCreated called with null SurfaceControl!");
+                return;
+            }
             mTaskViewTaskController.surfaceCreated(control);
         }
 
         @Override
         public void setWindowBounds(Rect bounds) {
             ensureManageSystemUIPermission(mContext);
+            if (bounds == null || bounds.isEmpty()) {
+                Slog.w(TAG, "setWindowBounds called with invalid bounds: " + bounds);
+                return;
+            }
             mTaskViewTransitions.setTaskBounds(mTaskViewTaskController, bounds);
         }
 
@@ -328,13 +336,19 @@ public class RemoteCarTaskViewServerImpl implements TaskViewBase {
     @Override
     public Rect getCurrentBoundsOnScreen() {
         try {
-            return mCarTaskViewClient.getCurrentBoundsOnScreen();
+            Rect bounds = mCarTaskViewClient.getCurrentBoundsOnScreen();
+            // Log warning if bounds are empty or null - indicates TaskView rendering issue
+            if (bounds == null || bounds.isEmpty()) {
+                Slog.w(TAG, "WARNING: getCurrentBoundsOnScreen() returned empty/null bounds: " + bounds
+                        + " - TaskView may not be rendered properly");
+                return null;  // Return null instead of Rect(0,0,0,0) to signal error
+            }
+            return bounds;
         } catch (DeadSystemRuntimeException ex) {
             Slog.w(TAG, "Failed to call getCurrentBoundsOnScreen() as TaskView client has "
                     + "already died. Host part will be released shortly.");
         }
-        return new Rect(0, 0, 0, 0); // If it reaches here, it means that
-        // the host side is already being released so it doesn't matter what is returned from here.
+        return null;  // Return null to indicate error, not Rect(0,0,0,0)
     }
 
     @Override

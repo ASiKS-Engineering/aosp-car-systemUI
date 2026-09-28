@@ -501,7 +501,14 @@ public final class TaskPanel extends SysUIPanel {
     @VisibleForTesting
     void updateAutoDecor(AutoDecor autoDecor, Decor decor,
             AutoSurfaceTransaction autoSurfaceTransaction) {
-        Rect bounds = new Rect(0, 0, getBounds().width(), getBounds().height());
+        Rect panelBounds = getBounds();
+        if (panelBounds == null || panelBounds.isEmpty()) {
+            // Log warning and skip update if bounds are invalid
+            Log.w(TAG, "updateAutoDecor: Invalid panel bounds, skipping autoDecor update. Bounds=" + panelBounds);
+            return;
+        }
+        
+        Rect bounds = new Rect(panelBounds);  // Copy existing bounds instead of creating new from 0,0
         autoSurfaceTransaction.setBounds(autoDecor, bounds);
         autoSurfaceTransaction.setVisibility(autoDecor, true);
         autoSurfaceTransaction.setZOrder(autoDecor, decor.getLayer());
