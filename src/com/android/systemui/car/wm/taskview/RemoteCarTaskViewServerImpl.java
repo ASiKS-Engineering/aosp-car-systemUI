@@ -102,6 +102,8 @@ public class RemoteCarTaskViewServerImpl implements TaskViewBase {
         @Override
         public void notifySurfaceCreated(SurfaceControl control) {
             ensureManageSystemUIPermission(mContext);
+            Slog.i(TAG, "notifySurfaceCreated: control=" + control
+                    + ", taskInfo=" + mTaskViewTaskController.getTaskInfo());
             if (control == null) {
                 Slog.e(TAG, "notifySurfaceCreated called with null SurfaceControl!");
                 return;
@@ -112,6 +114,8 @@ public class RemoteCarTaskViewServerImpl implements TaskViewBase {
         @Override
         public void setWindowBounds(Rect bounds) {
             ensureManageSystemUIPermission(mContext);
+            Slog.i(TAG, "setWindowBounds: bounds=" + bounds
+                    + ", taskInfo=" + mTaskViewTaskController.getTaskInfo());
             if (bounds == null || bounds.isEmpty()) {
                 Slog.w(TAG, "setWindowBounds called with invalid bounds: " + bounds);
                 return;
@@ -211,6 +215,7 @@ public class RemoteCarTaskViewServerImpl implements TaskViewBase {
         public void showEmbeddedTask() {
             ensureManageSystemUIPermission(mContext);
             ActivityManager.RunningTaskInfo taskInfo = mTaskViewTaskController.getTaskInfo();
+                Slog.i(TAG, "showEmbeddedTask: taskInfo=" + taskInfo);
             if (taskInfo == null) {
                 return;
             }
@@ -227,6 +232,7 @@ public class RemoteCarTaskViewServerImpl implements TaskViewBase {
         public void setTaskVisibility(boolean visibility) {
             ensureManageSystemUIPermission(mContext);
             ActivityManager.RunningTaskInfo taskInfo = mTaskViewTaskController.getTaskInfo();
+                Slog.i(TAG, "setTaskVisibility: visibility=" + visibility + ", taskInfo=" + taskInfo);
             if (taskInfo == null) {
                 return;
             }
@@ -242,6 +248,7 @@ public class RemoteCarTaskViewServerImpl implements TaskViewBase {
         public void reorderTask(boolean onTop) {
             ensureManageSystemUIPermission(mContext);
             ActivityManager.RunningTaskInfo taskInfo = mTaskViewTaskController.getTaskInfo();
+                Slog.i(TAG, "reorderTask: onTop=" + onTop + ", taskInfo=" + taskInfo);
             if (taskInfo == null) {
                 return;
             }

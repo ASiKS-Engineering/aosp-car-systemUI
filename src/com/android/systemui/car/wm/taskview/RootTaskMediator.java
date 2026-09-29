@@ -146,6 +146,13 @@ public final class RootTaskMediator implements ShellTaskOrganizer.TaskListener {
     public void onTaskAppeared(ActivityManager.RunningTaskInfo taskInfo, SurfaceControl leash) {
         ShellTaskOrganizer.TaskListener.super.onTaskAppeared(taskInfo, leash);
 
+        Log.i(TAG, "onTaskAppeared: taskId=" + taskInfo.taskId
+            + ", parent=" + taskInfo.parentTaskId
+            + ", hasParent=" + taskInfo.hasParentTask()
+            + ", visible=" + taskInfo.isVisible
+            + ", displayId=" + taskInfo.displayId
+            + ", isLaunchRoot=" + mIsLaunchRoot);
+
         // The first call to onTaskAppeared() is always for the root-task.
         if (mRootTask == null && !taskInfo.hasParentTask()) {
             mRootTask = taskInfo;
@@ -187,6 +194,11 @@ public final class RootTaskMediator implements ShellTaskOrganizer.TaskListener {
     @Override
     public void onTaskInfoChanged(ActivityManager.RunningTaskInfo taskInfo) {
         ShellTaskOrganizer.TaskListener.super.onTaskInfoChanged(taskInfo);
+        Log.i(TAG, "onTaskInfoChanged: taskId=" + taskInfo.taskId
+                + ", visible=" + taskInfo.isVisible
+                + ", isFocused=" + taskInfo.isFocused
+                + ", displayId=" + taskInfo.displayId
+                + ", position=" + taskInfo.positionInParent);
         if (mRootTask != null
                 && mRootTask.taskId == taskInfo.taskId) {
             mTaskViewTaskShellPart.onTaskInfoChanged(taskInfo);
@@ -214,6 +226,10 @@ public final class RootTaskMediator implements ShellTaskOrganizer.TaskListener {
     @Override
     public void onTaskVanished(ActivityManager.RunningTaskInfo taskInfo) {
         ShellTaskOrganizer.TaskListener.super.onTaskVanished(taskInfo);
+        Log.i(TAG, "onTaskVanished: taskId=" + taskInfo.taskId
+                + ", visible=" + taskInfo.isVisible
+                + ", displayId=" + taskInfo.displayId
+                + ", isLaunchRoot=" + mIsLaunchRoot);
         if (mRootTask != null
                 && mRootTask.taskId == taskInfo.taskId) {
             mTaskViewTaskShellPart.onTaskVanished(taskInfo);
