@@ -215,13 +215,19 @@ public class RemoteCarTaskViewServerImpl implements TaskViewBase {
         public void showEmbeddedTask() {
             ensureManageSystemUIPermission(mContext);
             ActivityManager.RunningTaskInfo taskInfo = mTaskViewTaskController.getTaskInfo();
-                Slog.i(TAG, "showEmbeddedTask: taskId=" + taskIdOf(taskInfo));
+            Slog.i(TAG, "showEmbeddedTask: taskId=" + taskIdOf(taskInfo));
             if (taskInfo == null) {
                 return;
             }
-            mMainExecutor.execute(() ->
-                    mTaskViewTransitions.setTaskViewVisible(mTaskViewTaskController, /* visible= */
-                    true, /* reorder= */ true));
+            mMainExecutor.execute(() -> {
+                mTaskViewTransitions.setTaskViewVisible(mTaskViewTaskController, /* visible= */
+                        true, /* reorder= */ true);
+                // setTaskViewVisible() is a no-op while TaskViewTransitions still believes the
+                // task is visible. That state is not updated when the system hides the task
+                // (e.g. HOME root task brought to front), so also reorder the task explicitly.
+                mTaskViewTransitions.reorderTaskViewTask(mTaskViewTaskController, /* onTop= */
+                        true);
+            });
         }
 
         @Override

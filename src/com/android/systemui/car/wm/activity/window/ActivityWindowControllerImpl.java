@@ -39,7 +39,7 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
             ActivityWindowController.class.getSimpleName();
 
     /** Temporary debug marker; bump on every debug build to identify the running SystemUI. */
-    public static final String BUILD_MARKER = "NAVDBG-20261001-A";
+    public static final String BUILD_MARKER = "NAVDBG-20261001-B";
 
     /*
      * Navigator application sends this broadcast through scalable_ui_actions.xml.
