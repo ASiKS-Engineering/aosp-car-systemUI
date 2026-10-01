@@ -2,7 +2,6 @@ package com.android.systemui.car.wm.activity.window;
 
 import static android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
 
-import android.app.ActivityOptions;
 import android.annotation.NonNull;
 import android.car.app.CarActivityManager;
 import android.car.app.CarTaskViewController;
@@ -15,7 +14,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.os.Binder;
@@ -40,6 +38,9 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
     public static final String TAG =
             ActivityWindowController.class.getSimpleName();
 
+    /** Temporary debug marker; bump on every debug build to identify the running SystemUI. */
+    public static final String BUILD_MARKER = "NAVDBG-20261001-A";
+
     /*
      * Navigator application sends this broadcast through scalable_ui_actions.xml.
      */
@@ -54,9 +55,6 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
 
     private static final String NAVIGATION_MODE_HOME =
             "HOME";
-
-    private static final String NAVIGATOR_PACKAGE =
-            "com.example.campernavigator";
 
     @NonNull
     private final Context mContext;
@@ -83,28 +81,23 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
     private CarActivityManager mCarActivityManager;
 
         /*
-         * The RemoteCarDefaultRootTaskView is used only for fullscreen navigator hosting.
-         * HOME stays visually launcher-owned and hides this root task view.
-         */
+     * The RemoteCarDefaultRootTaskView hosts the launch-root tasks. The navigator itself is
+     * hosted by the Launcher's own task view; this class only manages the root task bounds.
+     */
     private RemoteCarDefaultRootTaskView mTaskView;
 
-        /*
-         * Current system bar insets.
-         *
-         * These are used to keep fullscreen content aligned with the visible system bars and to
-         * preserve a sane hidden-home fallback state for the root task view.
-         */
+    /*
+     * Current system bar insets, used to compute the HOME bounds.
+     */
     private int mTopInset;
     private int mBottomInset;
 
-        /*
-         * Current navigation display mode.
-         *
-         * Default is HOME because the Launcher is the initial visible state.
-         */
-        private boolean mNavigationFullscreen = false;
-        private boolean mNavigatorFullscreenTaskRequested;
-
+    /*
+     * Current navigation display mode.
+     *
+     * Default is HOME because the Launcher is the initial visible state.
+     */
+    private boolean mNavigationFullscreen = false;
     @NonNull
     private final BroadcastReceiver mNavigationUiModeReceiver =
             new BroadcastReceiver() {
@@ -118,10 +111,10 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
                     String mode = intent.getStringExtra(
                             EXTRA_NAVIGATION_UI_MODE);
 
-                                        Log.i(TAG, "Navigation UI broadcast received: mode=" + mode
-                                                        + ", fullscreen=" + mNavigationFullscreen
-                                                        + ", navigatorTaskRequested=" + mNavigatorFullscreenTaskRequested
-                                                        + ", taskView=" + mTaskView);
+Log.i(TAG, "Navigation UI broadcast received: build=" + BUILD_MARKER
+                            + ", mode=" + mode
+                            + ", fullscreen=" + mNavigationFullscreen
+                            + ", taskViewReady=" + (mTaskView != null));
 
                     if (NAVIGATION_MODE_FULLSCREEN.equals(mode)) {
                         Log.i(TAG, "Navigation UI mode: FULLSCREEN");
@@ -167,6 +160,8 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
     @MainThread
     @Override
     public void init() {
+        Log.i(TAG, "init: systemui build=" + BUILD_MARKER
+                + ", pid=" + android.os.Process.myPid());
         /*
          * Listen for FULLSCREEN / HOME mode changes.
          */
@@ -356,7 +351,8 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
                                     RemoteCarDefaultRootTaskView
                                             taskView) {
 
-                                Log.i(TAG, "Root Task View created: taskView=" + taskView
+                                Log.i(TAG, "Root Task View created: view="
+                                        + System.identityHashCode(taskView)
                                         + ", fullscreen=" + mNavigationFullscreen);
 
                                 mTaskView = taskView;
@@ -370,19 +366,14 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
                                 ViewGroup layout =
                                         (ViewGroup) mLayout.findViewById(R.id.activity_area);
 
-                                // The task view still needs a host surface in SystemUI even when
-                                // HOME keeps it hidden behind the launcher-managed navigation.
+                                /*
+                                 * The task view needs a SurfaceView host so the root task can
+                                 * be organized.
+                                 */
                                 taskView.setVisibility(View.INVISIBLE);
                                 layout.addView(taskView);
 
-                                Log.i(TAG, "Root Task View attached: parent=" + taskView.getParent()
-                                        + ", visibility=" + taskView.getVisibility());
-
-                                if (mNavigationFullscreen) {
-                                    applyFullscreenBounds();
-                                } else {
-                                    hideRootTaskViewForHome();
-                                }
+                                applyCurrentBounds();
 
                                 Log.d(
                                         TAG,
@@ -392,43 +383,35 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
                             @Override
                             public void onTaskViewInitialized() {
 
-                                                                Log.i(TAG, "Root Task View initialized: taskView=" + mTaskView
-                                                                                + ", fullscreen=" + mNavigationFullscreen);
+                                Log.i(TAG, "Root Task View initialized: fullscreen="
+                                        + mNavigationFullscreen);
 
-                                                                if (mTaskView != null) {
-                                                                        if (mNavigationFullscreen) {
-                                                                                applyFullscreenBounds();
-                                                                        } else {
-                                                                                hideRootTaskViewForHome();
-                                                                        }
-                                                                }
+                                applyCurrentBounds();
                             }
                         });
+    }
+
+    private void applyCurrentBounds() {
+        if (mTaskView == null) {
+            return;
+        }
+        if (mNavigationFullscreen) {
+            applyFullscreenBounds();
+        } else {
+            applyHomeBounds();
+        }
     }
 
     /**
      * Switch to fullscreen navigation mode.
      *
-     * Result:
-     *
-     *   +------------------------------------------+
-     *   |                 NAVIGATION               |
-     *   |                                          |
-     *   |             FULL DISPLAY                 |
-     *   |                                          |
-     *   +------------------------------------------+
-     *
-     * Launcher/widget are behind the navigation task.
+     * The navigator is hosted by the Launcher's task view; only the bounds of the root task
+     * (used for other launched apps) follow the mode.
      */
     private void showNavigationFullscreen() {
 
-                Log.i(TAG, "showNavigationFullscreen: before fullscreen=" + mNavigationFullscreen
-                                + ", taskView=" + mTaskView
-                                + ", navigatorTaskRequested=" + mNavigatorFullscreenTaskRequested);
+        Log.i(TAG, "showNavigationFullscreen: taskViewReady=" + (mTaskView != null));
         mNavigationFullscreen = true;
-        if (!mNavigatorFullscreenTaskRequested && launchNavigatorTask()) {
-            mNavigatorFullscreenTaskRequested = true;
-        }
 
         if (mTaskView == null) {
             Log.w(
@@ -443,49 +426,19 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
 
     /**
      * Switch back to normal HOME mode.
-     *
-     * Result:
-     *
-     *   +------------------------------------------+
-     *   |              TOP SYSTEMUI                |
-     *   +------------------------------------------+
-     *   |                                          |
-     *   |       Launcher + Navigation area        |
-     *   |                                          |
-     *   +------------------------------------------+
-     *   |            BOTTOM SYSTEMUI               |
-     *   +------------------------------------------+
      */
     private void showHomeMode() {
 
-                Log.i(TAG, "showHomeMode: before fullscreen=" + mNavigationFullscreen
-                                + ", taskView=" + mTaskView
-                                + ", navigatorTaskRequested=" + mNavigatorFullscreenTaskRequested);
+        Log.i(TAG, "showHomeMode: taskViewReady=" + (mTaskView != null));
         mNavigationFullscreen = false;
-                if (mNavigatorFullscreenTaskRequested) {
-                        Log.i(TAG, "showHomeMode: launching HOME task to replace fullscreen navigator");
-                        launchHomeTask();
-                        mNavigatorFullscreenTaskRequested = false;
-                }
 
-                if (mTaskView == null) {
-                        Log.w(TAG, "Cannot enter home mode: TaskView is not ready");
-                        return;
-                }
-
-                hideRootTaskViewForHome();
-    }
-
-        private void hideRootTaskViewForHome() {
-                if (mTaskView == null) {
-                        return;
-                }
-
-                Log.i(TAG, "hideRootTaskViewForHome: applying home bounds and hiding taskView="
-                                + mTaskView);
-                applyHomeBounds();
-                mTaskView.setTaskVisibility(false);
+        if (mTaskView == null) {
+            Log.w(TAG, "Cannot enter home mode: TaskView is not ready");
+            return;
         }
+
+        applyHomeBounds();
+    }
 
     /**
      * Makes the embedded task occupy the entire display.
@@ -493,7 +446,6 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
     private void applyFullscreenBounds() {
 
         if (mTaskView == null) {
-                        Log.w(TAG, "applyFullscreenBounds: taskView is null");
             return;
         }
 
@@ -522,13 +474,7 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
                 width,
                 height);
 
-        Log.d(
-                TAG,
-                "Applying FULLSCREEN bounds: "
-                        + bounds);
-
-        Log.i(TAG, "applyFullscreenBounds: width=" + width + ", height=" + height
-                + ", taskViewVisible=" + mTaskView.getVisibility());
+        Log.i(TAG, "applyFullscreenBounds: " + bounds);
 
         /*
          * RemoteCarTaskView.setWindowBounds() expects
@@ -553,7 +499,6 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
     private void applyHomeBounds() {
 
         if (mTaskView == null) {
-                        Log.w(TAG, "applyHomeBounds: taskView is null");
             return;
         }
 
@@ -615,49 +560,9 @@ public class ActivityWindowControllerImpl implements ActivityWindowController {
                         + " bottomInset="
                         + mBottomInset);
 
-        Log.i(TAG, "applyHomeBounds: width=" + width + ", height=" + height
-                + ", top=" + top + ", bottom=" + bottom
-                + ", taskViewVisible=" + mTaskView.getVisibility());
+        Log.i(TAG, "applyHomeBounds: " + bounds);
 
         mTaskView.setWindowBounds(bounds);
         mTaskView.showEmbeddedTask();
-    }
-
-    private boolean launchNavigatorTask() {
-        Log.i(TAG, "launchNavigatorTask: package=" + NAVIGATOR_PACKAGE
-                + ", displayId=" + mContext.getDisplayId());
-        Intent navigatorIntent = new Intent(Intent.ACTION_MAIN)
-                .addCategory(Intent.CATEGORY_APP_MAPS)
-                .setPackage(NAVIGATOR_PACKAGE)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        | Intent.FLAG_ACTIVITY_SINGLE_TOP
-                        | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        navigatorIntent.putExtra(EXTRA_NAVIGATION_UI_MODE, NAVIGATION_MODE_FULLSCREEN);
-
-        PackageManager packageManager = mContext.getPackageManager();
-        if (navigatorIntent.resolveActivity(packageManager) == null) {
-            Log.w(TAG, "Navigator activity is not available for fullscreen launch");
-            return false;
-        }
-
-                Log.i(TAG, "launchNavigatorTask: resolved activity ok, starting with fullscreen extra");
-
-        ActivityOptions options = ActivityOptions.makeBasic();
-        options.setLaunchDisplayId(mContext.getDisplayId());
-        mContext.startActivity(navigatorIntent, options.toBundle());
-        return true;
-    }
-
-    private void launchHomeTask() {
-                Log.i(TAG, "launchHomeTask: displayId=" + mContext.getDisplayId());
-        Intent homeIntent = new Intent(Intent.ACTION_MAIN)
-                .addCategory(Intent.CATEGORY_HOME)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        ActivityOptions options = ActivityOptions.makeBasic();
-        options.setLaunchDisplayId(mContext.getDisplayId());
-        mContext.startActivity(homeIntent, options.toBundle());
     }
 }
