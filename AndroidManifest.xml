@@ -32,6 +32,8 @@
     <!-- This permission is required to use CarOccupantZoneManager. -->
     <uses-permission android:name="android.car.permission.CAR_CONTROL_AUDIO_SETTINGS" />
     <uses-permission android:name="android.car.permission.CAR_IDENTIFICATION"/>
+    <!-- This permission is required to show the GNSS satellite count in the top bar. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- This permission is required to get bluetooth broadcast. -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />

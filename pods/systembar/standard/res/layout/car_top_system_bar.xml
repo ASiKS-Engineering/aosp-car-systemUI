@@ -37,6 +37,19 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
+        <com.android.systemui.car.statusicon.location.GnssSatelliteCountView
+            android:id="@+id/gnss_satellite_count"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/car_padding_2"
+            android:paddingEnd="@dimen/car_padding_2"
+            android:drawablePadding="@dimen/car_padding_1"
+            android:drawableStart="@drawable/ic_satellite"
+            android:drawableTint="@color/system_bar_icon_color"
+            android:singleLine="true"
+            style="@style/SystemBarClockText" />
+
         <include
             layout="@layout/qc_status_icons_horizontal"
             android:layout_width="wrap_content"

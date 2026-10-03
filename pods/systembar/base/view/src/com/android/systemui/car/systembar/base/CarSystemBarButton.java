@@ -432,6 +432,10 @@ public class CarSystemBarButton extends LinearLayout implements
                 }
             }
 
+            if (mSelectedIntent != null
+                    && mSelectedIntent.hasExtra(NavigationUiModeTracker.EXTRA_MODE)) {
+                NavigationUiModeTracker.ensureRegistered(mContext);
+            }
             setOnClickListener(getButtonClickListener());
 
         } catch (URISyntaxException e) {
@@ -474,6 +478,10 @@ public class CarSystemBarButton extends LinearLayout implements
 					Log.e(TAG, "Failed to send before-click intent", e);
 				}
 			}
+			if (isRedundantNavigationModeRequest(getIntent())) {
+				Log.i(TAG, "Skipping redundant navigation mode request");
+				return;
+			}
 			if (getIntent() != null) {
                 boolean intentLaunched = false;
                 try {
@@ -511,6 +519,33 @@ public class CarSystemBarButton extends LinearLayout implements
                 setSelected(!mSelected);
             }
         };
+    }
+
+    /**
+     * True if the intent asks the launcher for the navigation mode it already shows while the
+     * launcher is the top activity. Launching again only causes a needless task transition.
+     */
+    private boolean isRedundantNavigationModeRequest(Intent intent) {
+        if (intent == null || intent.getComponent() == null) {
+            return false;
+        }
+        ComponentName target = intent.getComponent();
+        String requested = intent.getStringExtra(NavigationUiModeTracker.EXTRA_MODE);
+        if (!"com.android.car.carlauncher".equals(target.getPackageName()) || requested == null
+                || !requested.equals(NavigationUiModeTracker.getMode())) {
+            return false;
+        }
+        try {
+            ActivityTaskManager.RootTaskInfo top =
+                    ActivityTaskManager.getService().getRootTaskInfoOnDisplay(
+                            WINDOWING_MODE_FULLSCREEN, ACTIVITY_TYPE_UNDEFINED,
+                            mContext.getDisplayId());
+            return top != null && top.topActivity != null
+                    && target.getClassName().equals(top.topActivity.getClassName());
+        } catch (RemoteException e) {
+            Log.e(TAG, "Failed getting top task", e);
+            return false;
+        }
     }
 
     /** Defines the behavior of a long click. */
