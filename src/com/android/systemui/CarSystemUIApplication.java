@@ -20,6 +20,7 @@ import static android.car.CarOccupantZoneManager.DISPLAY_TYPE_MAIN;
 
 import android.annotation.NonNull;
 import android.annotation.Nullable;
+import android.app.Application;
 import android.car.Car;
 import android.car.CarOccupantZoneManager;
 import android.content.Context;
@@ -42,6 +43,10 @@ public class CarSystemUIApplication extends SystemUIApplicationImpl {
 
     private boolean mIsVisibleBackgroundUserSysUI;
 
+    private static boolean isGnssProcess() {
+        String processName = Application.getProcessName();
+        return processName != null && processName.endsWith(":gnss");
+    }
     public CarSystemUIApplication() {
         super();
         SceneContainerFlag.isEnabledOnVariant = false;
@@ -49,6 +54,12 @@ public class CarSystemUIApplication extends SystemUIApplicationImpl {
 
     @Override
     public void onCreate() {
+        if (isGnssProcess()) {
+            // This process only hosts GnssSatelliteCountService, which needs none of the SystemUI
+            // components. Initializing them would, among others, register a second
+            // CarSystemUIProxy with CarService.
+            return;
+        }
         mIsVisibleBackgroundUserSysUI = CarSystemUIUserUtil.isSecondaryMUMDSystemUI();
         super.onCreate();
         if (mIsVisibleBackgroundUserSysUI) {
@@ -74,6 +85,9 @@ public class CarSystemUIApplication extends SystemUIApplicationImpl {
 
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        if (isGnssProcess()) {
+            return;
+        }
         getTheme().applyStyle(com.android.systemui.res.R.style.Theme_SystemUI, true);
         getTheme().applyStyle(
                 com.android.systemui.car.shared.R.style.CarSystemUIThemeOverlay, true);

@@ -23,11 +23,14 @@ import static com.android.systemui.car.userswitcher.UserSwitcherConstants.OVERLA
 import android.annotation.UserIdInt;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.UserInfo;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.UserHandle;
+import android.os.UserManager;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -192,7 +195,16 @@ public class UserSwitchTransitionViewController extends OverlayViewController {
             String switchingFromUserMessage =
                     mActivityManager.getSwitchingFromUserMessage(previousUserId);
             msgView.setText(switchingFromUserMessage != null ? switchingFromUserMessage
-                    : mResources.getString(R.string.car_loading_profile));
+                    : getWelcomeText(newUserId));
         }
+    }
+
+    private String getWelcomeText(@UserIdInt int userId) {
+        UserInfo userInfo = mContext.getSystemService(UserManager.class).getUserInfo(userId);
+        String name = userInfo != null ? userInfo.name : null;
+        if (TextUtils.isEmpty(name)) {
+            return mResources.getString(R.string.car_welcome);
+        }
+        return mResources.getString(R.string.car_welcome_user, name);
     }
 }

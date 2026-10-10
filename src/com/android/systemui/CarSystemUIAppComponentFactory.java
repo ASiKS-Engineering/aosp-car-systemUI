@@ -16,7 +16,9 @@
 
 package com.android.systemui;
 
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 
 /**
  * Starts up SystemUI using {@link CarSystemUIInitializer}.
@@ -26,8 +28,24 @@ import android.content.Context;
  * @see SystemUIAppComponentFactoryBase
  */
 public class CarSystemUIAppComponentFactory extends SystemUIAppComponentFactoryBase {
+    private static final String GNSS_SERVICE_CLASS =
+            "com.android.systemui.car.statusicon.location.GnssSatelliteCountService";
+
     @Override
     protected SystemUIInitializer createSystemUIInitializer(Context context) {
         return new CarSystemUIInitializer(context);
+    }
+
+    @Override
+    public Service instantiateServiceCompat(ClassLoader cl, String className, Intent intent) {
+        if (GNSS_SERVICE_CLASS.equals(className)) {
+            // Runs in the :gnss process, where the SystemUI dependency graph is not created.
+            try {
+                return (Service) cl.loadClass(className).getDeclaredConstructor().newInstance();
+            } catch (ReflectiveOperationException e) {
+                throw new RuntimeException("Cannot instantiate " + className, e);
+            }
+        }
+        return super.instantiateServiceCompat(cl, className, intent);
     }
 }

@@ -25,6 +25,8 @@
     <string name="profile_limit_reached_title" msgid="7891779218496729653">"Maximale Profilanzahl erreicht"</string>
     <string name="profile_limit_reached_message" msgid="1534369584753840606">"{count,plural, =1{Du kannst maximal ein Profil erstellen.}other{Du kannst maximal # Profile hinzufügen.}}"</string>
     <string name="car_loading_profile" msgid="458961191993686065">"Wird geladen"</string>
+    <string name="car_welcome_user">"Willkommen, <xliff:g id="USER_NAME">%1$s</xliff:g>"</string>
+    <string name="car_welcome">"Willkommen"</string>
     <string name="car_loading_profile_developer_message" msgid="737810794567935702">"Nutzer wird geladen (von <xliff:g id="FROM_USER">%1$d</xliff:g> bis <xliff:g id="TO_USER">%2$d</xliff:g>)"</string>
     <string name="privacy_chip_off_content" msgid="8406415098507955316">"<xliff:g id="SENSOR">%1$s</xliff:g> ist deaktiviert."</string>
     <string name="privacy_chip_use_sensor" msgid="7688230720803089653">"<xliff:g id="SENSOR">%1$s</xliff:g> verwenden"</string>

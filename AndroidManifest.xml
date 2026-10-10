@@ -143,6 +143,12 @@
 
         <!-- The service needs to be directBootAware so that it can reflect the correct call state
          when the system boots up. -->
+        <!-- Runs as the foreground user to collect GNSS status for the top bar satellite count. -->
+        <service android:name="com.android.systemui.car.statusicon.location.GnssSatelliteCountService"
+            android:directBootAware="true"
+            android:exported="false"
+            android:process=":gnss" />
+
         <service android:name=".car.telecom.InCallServiceImpl"
             android:directBootAware="true"
             android:permission="android.permission.BIND_INCALL_SERVICE"

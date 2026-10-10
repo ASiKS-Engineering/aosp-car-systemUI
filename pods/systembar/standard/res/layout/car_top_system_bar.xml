@@ -48,6 +48,9 @@
             android:drawableStart="@drawable/ic_satellite"
             android:drawableTint="@color/system_bar_icon_color"
             android:singleLine="true"
+            android:textSize="16sp"
+            android:textFontWeight="400"
+            android:alpha="0.7"
             style="@style/SystemBarClockText" />
 
         <include
