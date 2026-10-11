@@ -478,8 +478,7 @@ public class CarSystemBarButton extends LinearLayout implements
 					Log.e(TAG, "Failed to send before-click intent", e);
 				}
 			}
-			if (isRedundantNavigationModeRequest(getIntent())) {
-				Log.i(TAG, "Skipping redundant navigation mode request");
+			if (handleNavigationModeRequestInPlace(getIntent())) {
 				return;
 			}
 			if (getIntent() != null) {
@@ -522,17 +521,20 @@ public class CarSystemBarButton extends LinearLayout implements
     }
 
     /**
-     * True if the intent asks the launcher for the navigation mode it already shows while the
-     * launcher is the top activity. Launching again only causes a needless task transition.
+     * Handles a Home/Navi request to the launcher while the launcher is already the top
+     * activity. A request for the mode that is already shown is dropped; a different mode is
+     * switched by broadcast only. Starting the launcher activity again re-orders the tasks, which
+     * makes the launcher's audio card and the embedded map flicker.
+     *
+     * @return true if the request was handled and the intent must not be launched
      */
-    private boolean isRedundantNavigationModeRequest(Intent intent) {
+    private boolean handleNavigationModeRequestInPlace(Intent intent) {
         if (intent == null || intent.getComponent() == null) {
             return false;
         }
         ComponentName target = intent.getComponent();
         String requested = intent.getStringExtra(NavigationUiModeTracker.EXTRA_MODE);
-        if (!"com.android.car.carlauncher".equals(target.getPackageName()) || requested == null
-                || !requested.equals(NavigationUiModeTracker.getMode())) {
+        if (!"com.android.car.carlauncher".equals(target.getPackageName()) || requested == null) {
             return false;
         }
         try {
@@ -540,12 +542,24 @@ public class CarSystemBarButton extends LinearLayout implements
                     ActivityTaskManager.getService().getRootTaskInfoOnDisplay(
                             WINDOWING_MODE_FULLSCREEN, ACTIVITY_TYPE_UNDEFINED,
                             mContext.getDisplayId());
-            return top != null && top.topActivity != null
-                    && target.getClassName().equals(top.topActivity.getClassName());
+            if (top == null || top.topActivity == null
+                    || !target.getClassName().equals(top.topActivity.getClassName())) {
+                return false;
+            }
         } catch (RemoteException e) {
             Log.e(TAG, "Failed getting top task", e);
             return false;
         }
+        if (requested.equals(NavigationUiModeTracker.getMode())) {
+            Log.i(TAG, "Skipping redundant navigation mode request");
+            return true;
+        }
+        Log.i(TAG, "Switching navigation mode in place: " + requested);
+        mContext.sendBroadcastAsUser(
+                new Intent(NavigationUiModeTracker.ACTION_MODE_CHANGED)
+                        .putExtra(NavigationUiModeTracker.EXTRA_MODE, requested),
+                getCurrentUserHandle(mContext, mUserTracker));
+        return true;
     }
 
     /** Defines the behavior of a long click. */
