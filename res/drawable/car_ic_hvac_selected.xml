@@ -7,8 +7,28 @@
     android:viewportWidth="24"
     android:viewportHeight="24">
 
+    <!-- Fan: ring with three swept blades. -->
     <path
         android:fillColor="@color/car_nav_icon_color_selected"
-        android:pathData="M12,12c0,0 2.3,-0.6 3.6,-2.4c1.3,-1.8 1.3,-4.2 1.3,-4.2s-2.4,0 -4.2,1.3C11.4,8 10.8,10.3 10.8,10.3c0,0 -2.3,0.6 -3.6,2.4c-1.3,1.8 -1.3,4.2 -1.3,4.2s2.4,0 4.2,-1.3C11.4,14.3 12,12 12,12z M12,12c0,0 -0.6,2.3 -2.4,3.6c-1.8,1.3 -4.2,1.3 -4.2,1.3s0,-2.4 1.3,-4.2c1.3,-1.3 3.6,-1.9 3.6,-1.9c0,0 0.6,-2.3 2.4,-3.6c1.8,-1.3 4.2,-1.3 4.2,-1.3s0,2.4 -1.3,4.2C13.8,11.4 12,12 12,12z" />
+        android:pathData="M12,1.5C17.8,1.5 22.5,6.2 22.5,12C22.5,17.8 17.8,22.5 12,22.5C6.2,22.5 1.5,17.8 1.5,12C1.5,6.2 6.2,1.5 12,1.5Z M12,2.8C6.92,2.8 2.8,6.92 2.8,12C2.8,17.08 6.92,21.2 12,21.2C17.08,21.2 21.2,17.08 21.2,12C21.2,6.92 17.08,2.8 12,2.8Z" />
+    <path
+        android:fillColor="@color/car_nav_icon_color_selected"
+        android:pathData="M12,12C10.9,10.2 10.4,7.9 11.0,5.6C11.4,4.2 12.6,3.6 13.9,4.0C16.3,4.8 17.0,7.6 15.2,9.8C14.3,10.9 13.1,11.6 12,12Z" />
+    <group
+        android:pivotX="12"
+        android:pivotY="12"
+        android:rotation="120">
+        <path
+            android:fillColor="@color/car_nav_icon_color_selected"
+            android:pathData="M12,12C10.9,10.2 10.4,7.9 11.0,5.6C11.4,4.2 12.6,3.6 13.9,4.0C16.3,4.8 17.0,7.6 15.2,9.8C14.3,10.9 13.1,11.6 12,12Z" />
+    </group>
+    <group
+        android:pivotX="12"
+        android:pivotY="12"
+        android:rotation="240">
+        <path
+            android:fillColor="@color/car_nav_icon_color_selected"
+            android:pathData="M12,12C10.9,10.2 10.4,7.9 11.0,5.6C11.4,4.2 12.6,3.6 13.9,4.0C16.3,4.8 17.0,7.6 15.2,9.8C14.3,10.9 13.1,11.6 12,12Z" />
+    </group>
 
 </vector>
